@@ -1,0 +1,125 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MENU1 MENU 
+BEGIN
+    POPUP "MainBaby"
+    BEGIN
+        MENUITEM "C&opy\tCtrl+C",               IDM_COPY
+        MENUITEM "C&ut\tCtrl+X",                IDM_CUT
+        MENUITEM "&Paste\tCtrl+V",              IDM_PASTE
+        MENUITEM SEPARATOR
+        MENUITEM "Bold\tCtrl+B",                IDM_BOLD
+        MENUITEM "Italic\tCtrl+I",              IDM_ITALIC
+        MENUITEM "Underline\tCtrl+U",           IDM_UNDERLINE
+        MENUITEM SEPARATOR
+        MENUITEM "&Set Font...\tAlt+Enter",     IDM_FONT
+        MENUITEM "&Foreground...",              IDM_FGCOLOR
+        MENUITEM "&Background...",              IDM_BGCOLOR
+        MENUITEM SEPARATOR
+        POPUP "Choose Icon"
+        BEGIN
+            MENUITEM "Red L",                       IDM_REDL
+            MENUITEM "Blue L",                      IDM_BLUEL
+            MENUITEM "Black L",                     IDM_BLACKL
+            MENUITEM "Blue R",                      IDM_BLUER
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "&About Sex...",               IDM_ABOUT
+        MENUITEM "&Move to Back\t(Alt+F4)",     IDM_CLOSE
+        MENUITEM "&Exit sex (But why?)",        IDM_QUIT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_ACCELERATOR1 ACCELERATORS 
+BEGIN
+    "B",            IDM_BOLD,               VIRTKEY, CONTROL, NOINVERT
+    "I",            IDM_ITALIC,             VIRTKEY, CONTROL, NOINVERT
+    "U",            IDM_UNDERLINE,          VIRTKEY, CONTROL, NOINVERT
+    VK_RETURN,      IDM_FONT,               VIRTKEY, ALT, NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_ICON2               ICON                    "icon2.ico"
+IDI_ICON3               ICON                    "icon5.ico"
+IDI_ICON4               ICON                    "icon4.ico"
+IDI_ICON1               ICON                    "icon1.ico"
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

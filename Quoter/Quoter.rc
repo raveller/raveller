@@ -1,0 +1,453 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 9, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\Quoter.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""afxres.rc""         // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\Quoter.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_QUOTER_DIALOG DIALOG  0, 0, 249, 129
+STYLE DS_SETFONT | DS_MODALFRAME | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Quoter"
+MENU IDR_QUOTER_MENU
+FONT 8, "Arial Black"
+BEGIN
+    DEFPUSHBUTTON   "&Minimize",IDC_MINIMIZE,127,107,50,14
+    PUSHBUTTON      "&Exit",IDOK,192,107,50,14
+    EDITTEXT        IDC_QUOTE_SPACE,7,28,235,75,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL
+    PUSHBUTTON      "&Random",IDC_GETQUOTE,7,7,50,14
+    PUSHBUTTON      "<<",IDC_PREVIOUS,81,7,19,14
+    PUSHBUTTON      "|<<",IDC_FIRST,61,7,18,14
+    PUSHBUTTON      ">>",IDC_NEXT,104,7,19,14
+    PUSHBUTTON      ">>|",IDC_LAST,125,7,18,14
+    COMBOBOX        IDC_SELECTCOMBO,216,7,26,74,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "&Write Target File",IDC_WRITETARGET,7,107,67,14
+END
+
+IDD_ABOUT DIALOG  0, 0, 187, 95
+STYLE DS_SETFONT | WS_POPUP
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "About Drawn OK",IDOK,"Button",BS_OWNERDRAW | BS_FLAT | WS_TABSTOP,0,0,187,95
+END
+
+IDD_EDITOPTIONS DIALOG  0, 0, 250, 198
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Quoter Options"
+FONT 8, "MS Sans Serif"
+BEGIN
+    GROUPBOX        "Output Files",IDC_STATIC,7,58,237,79
+    COMBOBOX        IDC_TIMERCOMBO,62,68,48,62,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Update:",IDC_STATIC,24,68,25,8
+    LTEXT           "Quote Separator",IDC_STATIC,7,7,52,8
+    EDITTEXT        IDC_SEPARATOR,71,7,40,14,ES_AUTOHSCROLL
+    LTEXT           "Default Quote File:",IDC_STATIC,7,26,56,8
+    EDITTEXT        IDC_QUOTEFILE,71,23,115,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Find",IDC_BROWSEQUOTE,218,23,26,14
+    PUSHBUTTON      "Set to Current",IDC_SETCURRENT,100,42,50,14
+    CONTROL         "Taskbar",IDC_TRAY,"Button",BS_AUTORADIOBUTTON | WS_GROUP,14,153,42,10
+    CONTROL         "System Tray",IDC_TASKBAR,"Button",BS_AUTORADIOBUTTON,73,153,54,10
+    CONTROL         "Both",IDC_BOTH,"Button",BS_AUTORADIOBUTTON,144,153,30,10
+    GROUPBOX        "Icon Display",IDC_STATIC,7,142,237,26
+    LISTBOX         IDC_TARGET_LIST,17,87,166,45,LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Add...",IDC_ADDOUTPUT,194,86,50,14
+    PUSHBUTTON      "Remove",IDC_REMOVEOUTPUT,194,116,50,14
+    PUSHBUTTON      "Edit...",IDC_EDITOUTPUT,194,100,50,14
+    PUSHBUTTON      "Edit",IDC_EDITQUOTE,190,23,26,14
+    DEFPUSHBUTTON   "OK",IDOK,139,176,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,194,176,50,14
+END
+
+IDD_FLOATER DIALOG  0, 0, 81, 144
+STYLE DS_SETFONT | WS_POPUP | WS_VISIBLE
+FONT 8, "MS Sans Serif"
+BEGIN
+END
+
+IDD_TRANS DIALOG  0, 0, 81, 144
+STYLE DS_SETFONT | WS_POPUP
+FONT 8, "MS Sans Serif"
+BEGIN
+END
+
+IDD_ADDOUTPUTFILE DIALOG  0, 0, 248, 106
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Add Output File"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,50,85,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,118,85,50,14
+    LTEXT           "Target:",IDC_STATIC,10,30,23,8
+    LTEXT           "Header:",IDC_STATIC,7,46,26,8
+    LTEXT           "Footer:",IDC_STATIC,11,62,22,8
+    EDITTEXT        IDC_TARGET,37,28,143,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_HEADER,37,44,143,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_FOOTER,37,60,143,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Find",IDC_BROWSETARGET,217,28,24,14
+    PUSHBUTTON      "Find",IDC_BROWSEHEADER,217,44,24,14
+    PUSHBUTTON      "Find",IDC_BROWSEFOOTER,217,59,24,14
+    LTEXT           "Display Name:",IDC_STATIC,7,7,46,8
+    EDITTEXT        IDC_DISPLAYNAME,55,7,83,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Edit",IDC_BUTTON1,187,28,24,14
+    PUSHBUTTON      "Edit",IDC_HEADEREDIT,187,44,24,14
+    PUSHBUTTON      "Edit",IDC_FOOTEREDIT,187,59,24,14
+    LTEXT           "EOL Tag",IDC_STATIC,144,7,30,8
+    EDITTEXT        IDC_EOLTAG,181,7,60,14,ES_AUTOHSCROLL
+END
+
+IDD_FLOATEROPTIONS DIALOG  0, 0, 258, 159
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Floater Options"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,146,138,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,201,138,50,14
+    LTEXT           "Floater Bitmap",IDC_STATIC,7,9,56,8
+    EDITTEXT        IDC_FLOATFILE,71,7,140,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Find",IDC_BROWSEFLOAT,225,7,26,14
+    CONTROL         "Slider1",IDC_BLUE_SLIDER,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,47,65,53,9
+    CONTROL         "Slider1",IDC_RED_SLIDER,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,47,38,53,9
+    LTEXT           "Red",IDC_STATIC,26,38,14,8
+    CONTROL         "Slider1",IDC_GREEN_SLIDER,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,47,52,53,9
+    LTEXT           "Green",IDC_STATIC,20,52,20,8
+    EDITTEXT        IDC_GREENBOX,103,52,20,14,ES_AUTOHSCROLL
+    LTEXT           "Blue",IDC_STATIC,25,65,15,8
+    EDITTEXT        IDC_REDBOX,103,38,20,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_BLUEBOX,103,65,20,14,ES_AUTOHSCROLL
+    LTEXT           "Floater Mask Color",IDC_STATIC,7,25,60,8
+    CONTROL         "Use Internal Bitmap",IDC_INTERNALBMP,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,34,89,77,10
+    CONTROL         "",IDC_DRAWBITMAP,"Button",BS_OWNERDRAW | BS_FLAT | WS_TABSTOP,138,31,113,99
+END
+
+IDD_RANDOMIZER DIALOGEX 0, 0, 211, 121
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Random Generator"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    EDITTEXT        IDC_RANDOM_STRING,7,83,197,14,ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_NOCHARS,164,7,40,14,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "No. chars",IDC_STATIC,124,7,32,8
+    CONTROL         "Numeric",IDC_NUM,"Button",BS_AUTORADIOBUTTON,7,7,42,10
+    CONTROL         "Hex",IDC_HEX,"Button",BS_AUTORADIOBUTTON,7,21,29,10
+    CONTROL         "Alphabet",IDC_ALPHA,"Button",BS_AUTORADIOBUTTON,7,34,44,10
+    CONTROL         "AlphaNumeric",IDC_ALPHANUM,"Button",BS_AUTORADIOBUTTON,7,50,60,10
+    CONTROL         "Other:",IDC_OTHERRAD,"Button",BS_AUTORADIOBUTTON,7,65,35,10
+    EDITTEXT        IDC_OTHERTEXT,43,64,92,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "&Generate",IDC_GENERATE,37,100,59,14
+    PUSHBUTTON      "Copy Clipboard",IDC_COPYCLIP,127,100,60,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "FileDescription", "Quoter"
+            VALUE "FileVersion", "1, 0, 0, 1"
+            VALUE "InternalName", "Quoter"
+            VALUE "LegalCopyright", "Copyright (C) 2000"
+            VALUE "OriginalFilename", "Quoter.EXE"
+            VALUE "ProductName", "Quoter Application"
+            VALUE "ProductVersion", "1, 0, 0, 1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_QUOTER_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 242
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 121
+    END
+
+    IDD_EDITOPTIONS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 244
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 191
+    END
+
+    IDD_ADDOUTPUTFILE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 241
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 99
+    END
+
+    IDD_FLOATEROPTIONS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 251
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 152
+    END
+
+    IDD_RANDOMIZER, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 204
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 114
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_QUOTER_MENU MENU 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&Open...",                    ID_FILE_OPEN
+        MENUITEM "Load Default",                ID_OPTION_LOADDEFAULT
+        MENUITEM SEPARATOR
+        MENUITEM "Exit",                        ID_FILE_EXIT
+    END
+    POPUP "&Options"
+    BEGIN
+        MENUITEM "&Quoter Options",             ID_OPTIONS_EDIT
+        MENUITEM "Floater &Options",            ID_OPTIONS_FLOATEROPTIONS
+        MENUITEM "Random Gen...",               ID_OPTIONS_RANDOMGEN
+        MENUITEM "Show &Float",                 ID_OPTION_SHOWFLOAT
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About",                      ID_HELP_ABOUT
+    END
+END
+
+IDR_POPUP_MENU MENU 
+BEGIN
+    POPUP "Popup"
+    BEGIN
+        MENUITEM "Quote",                       ID_POPUP_QUOTE
+        MENUITEM "Options",                     ID_OPTIONS_EDIT
+        MENUITEM SEPARATOR
+        MENUITEM "About",                       ID_HELP_ABOUT
+        MENUITEM SEPARATOR
+        MENUITEM "Exit",                        ID_FILE_EXIT
+    END
+END
+
+IDR_FLOATER_POPUP MENU 
+BEGIN
+    POPUP "Popup"
+    BEGIN
+        MENUITEM "&Close",                      ID_FLOATER_CLOSE
+    END
+END
+
+IDR_TASKBAR_POPUP MENU 
+BEGIN
+    POPUP "&Popup"
+    BEGIN
+        MENUITEM "Restore",                     ID_RESTORE
+        MENUITEM "&Exit",                       ID_FILE_EXIT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_FLOATER3            BITMAP                  "res\\floater3.bmp"
+IDB_ABOUT               BITMAP                  "res\\about2.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_EDITOPTIONS DLGINIT
+BEGIN
+    IDC_TIMERCOMBO, 0x403, 8, 0
+0x2035, 0x696d, 0x736e, 0x002e, 
+    IDC_TIMERCOMBO, 0x403, 9, 0
+0x3031, 0x6d20, 0x6e69, 0x2e73, "\000" 
+    IDC_TIMERCOMBO, 0x403, 9, 0
+0x3033, 0x6d20, 0x6e69, 0x2e73, "\000" 
+    IDC_TIMERCOMBO, 0x403, 7, 0
+0x2031, 0x6f68, 0x7275, "\000" 
+    IDC_TIMERCOMBO, 0x403, 8, 0
+0x7453, 0x7261, 0x7574, 0x0070, 
+    IDC_TIMERCOMBO, 0x403, 6, 0
+0x654e, 0x6576, 0x0072, 
+    IDC_TIMERCOMBO, 0x403, 1, 0
+"\000" 
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDS_SEPARATOR           "~~"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_FILE_OPEN            "Open a quote file"
+    IDS_ABOUT               "About..."
+    IDS_INIFILENAME         "quoter.ini"
+    IDS_DEFAULT_QUOTE_FILE  "Quotes.txt"
+    IDS_DISPLAYKEY          "DisplayName"
+    IDS_FOOTERKEY           "FooterFile"
+    IDS_HEADERKEY           "HeaderFile"
+    IDS_TARGETKEY           "TargetFile"
+    IDS_SEPARATORKEY        "Separator"
+    IDS_INTERVALKEY         "UpdateInterval"
+    IDS_VERSIONKEY          "Version"
+    IDS_DEFAULTKEY          "DefaultFile"
+    IDS_ICONKEY             "IconDisplay"
+    IDS_VERSION             "2.0"
+    IDS_TARGETGROUPMASK     "Target%d"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_INTERNALBMPKEY      "InternalBMP"
+    IDS_REDTRANSKEY         "RedTransparency"
+    IDS_BLUETRANSKEY        "BlueTransparency"
+    IDS_GREENTRANSKEY       "GreenTransparency"
+    IDS_BMPFILENAMEKEY      "BMPFilename"
+    IDS_EOLTAGKEY           "EOLTag"
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE 9, 1
+#pragma code_page(1252)
+#endif //_WIN32
+#include "res\Quoter.rc2"  // non-Microsoft Visual C++ edited resources
+#include "afxres.rc"         // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

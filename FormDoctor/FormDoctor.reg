@@ -1,0 +1,13 @@
+REGEDIT
+; This .REG file may be used by your SETUP program.
+;   If a SETUP program is not available, the entries below will be
+;   registered in your InitInstance automatically with a call to
+;   CWinApp::RegisterShellFileTypes and COleObjectFactory::UpdateRegistryAll.
+
+
+HKEY_CLASSES_ROOT\FormDoctor.Document = FormDo Document
+HKEY_CLASSES_ROOT\FormDoctor.Document\CLSID = {2969B3A2-40AD-11D4-9ACB-0020182EE5EF}
+
+HKEY_CLASSES_ROOT\CLSID\{2969B3A2-40AD-11D4-9ACB-0020182EE5EF} = FormDo Document
+HKEY_CLASSES_ROOT\CLSID\{2969B3A2-40AD-11D4-9ACB-0020182EE5EF}\ProgId = FormDoctor.Document
+HKEY_CLASSES_ROOT\CLSID\{2969B3A2-40AD-11D4-9ACB-0020182EE5EF}\LocalServer32 = FORMDOCTOR.EXE

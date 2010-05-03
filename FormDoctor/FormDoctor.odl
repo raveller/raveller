@@ -1,0 +1,42 @@
+// FormDoctor.odl : type library source for FormDoctor.exe
+
+// This file will be processed by the MIDL compiler to produce the
+// type library (FormDoctor.tlb).
+
+[ uuid(2969B3A3-40AD-11D4-9ACB-0020182EE5EF), version(1.0) ]
+library FormDoctor
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+
+	//  Primary dispatch interface for CFormDoctorDoc
+	
+	[ uuid(2969B3A4-40AD-11D4-9ACB-0020182EE5EF) ]
+	dispinterface IFormDoctor
+	{
+		properties:
+			// NOTE - ClassWizard will maintain property information here.
+			//    Use extreme caution when editing this section.
+			//{{AFX_ODL_PROP(CFormDoctorDoc)
+			//}}AFX_ODL_PROP
+			
+		methods:
+			// NOTE - ClassWizard will maintain method information here.
+			//    Use extreme caution when editing this section.
+			//{{AFX_ODL_METHOD(CFormDoctorDoc)
+			//}}AFX_ODL_METHOD
+
+	};
+
+	//  Class information for CFormDoctorDoc
+	
+	[ uuid(2969B3A2-40AD-11D4-9ACB-0020182EE5EF) ]
+	coclass Document
+	{
+		[default] dispinterface IFormDoctor;
+	};
+
+	//{{AFX_APPEND_ODL}}
+	//}}AFX_APPEND_ODL}}
+};

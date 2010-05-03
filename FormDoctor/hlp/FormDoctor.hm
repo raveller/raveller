@@ -1,0 +1,20 @@
+ 
+// Commands (ID_* and IDM_*) 
+HID_FORM_ENTERDATA                      0x18003
+HID_FORM_SUBMIT                         0x18004
+HID_FORM_VIEWLASTRESPONSE               0x18006
+ 
+// Prompts (IDP_*) 
+HIDP_OLE_INIT_FAILED                    0x30064
+HIDP_SOCKETS_INIT_FAILED                0x30068
+ 
+// Resources (IDR_*) 
+HIDR_MAINFRAME                          0x20080
+HIDR_FORMDOTYPE                         0x20081
+ 
+// Dialogs (IDD_*) 
+HIDD_ABOUTBOX                           0x20064
+HIDD_FORMDATA                           0x20082
+HIDD_RESPONSE                           0x20083
+ 
+// Frame Controls (IDW_*) 

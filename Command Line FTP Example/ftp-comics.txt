@@ -1,0 +1,14 @@
+o www.raveller.com
+raveller
+Atm0stir
+binary
+prompt
+cd comics
+put comics-01.html
+put comics-02.html
+put comics-03.html
+put comics-04.html
+put comics-05.html
+put comics-06.html
+put comics-07.html
+quit

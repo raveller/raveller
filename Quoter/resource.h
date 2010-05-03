@@ -1,0 +1,119 @@
+//{{NO_DEPENDENCIES}}
+// Microsoft Visual C++ generated include file.
+// Used by Quoter.rc
+//
+#define IDS_SEPARATOR                   2
+#define IDM_ABOUT                       0x0010
+#define IDM_RESTORE                     0x0011
+#define IDD_QUOTER_DIALOG               102
+#define IDR_MAINFRAME                   128
+#define IDR_QUOTER_MENU                 133
+#define IDD_ABOUT                       134
+#define IDB_ABOUT                       135
+#define IDD_EDITOPTIONS                 136
+#define IDR_POPUP_MENU                  139
+#define IDD_FLOATER                     140
+#define IDR_FLOATER_POPUP               140
+#define IDD_TRANS                       141
+#define IDB_FLOATER                     142
+#define IDB_FLOATER2                    144
+#define IDB_FLOATER2_MASK               146
+#define IDR_TASKBAR_POPUP               147
+#define IDD_ADDOUTPUTFILE               148
+#define IDB_FLOATER3                    151
+#define IDD_FLOATEROPTIONS              152
+#define IDD_RANDOMIZER                  155
+#define IDC_QUOTE_SPACE                 1001
+#define IDC_GETQUOTE                    1002
+#define IDC_PREVIOUS                    1004
+#define IDC_FIRST                       1005
+#define IDC_NEXT                        1006
+#define IDC_LAST                        1007
+#define IDC_SELECTCOMBO                 1008
+#define IDC_TIMERCOMBO                  1012
+#define IDC_TARGET                      1013
+#define IDC_HEADER                      1014
+#define IDC_FOOTER                      1015
+#define IDC_BROWSETARGET                1016
+#define IDC_BROWSEHEADER                1017
+#define IDC_BROWSEFOOTER                1018
+#define IDC_SEPARATOR                   1019
+#define IDC_QUOTEFILE                   1020
+#define IDC_BROWSEQUOTE                 1021
+#define IDC_EDITQUOTE                   1022
+#define IDC_SETCURRENT                  1023
+#define IDC_FLOATFILE                   1024
+#define IDC_BROWSEFLOAT                 1025
+#define IDC_TRAY                        1026
+#define IDC_TASKBAR                     1027
+#define IDC_BOTH                        1028
+#define IDC_WRITETARGET                 1032
+#define IDC_MINIMIZE                    1033
+#define IDC_TARGET_LIST                 1034
+#define IDC_ADDOUTPUT                   1035
+#define IDC_REMOVEOUTPUT                1036
+#define IDC_DISPLAYNAME                 1037
+#define IDC_BUTTON1                     1038
+#define IDC_HEADEREDIT                  1039
+#define IDC_EDITOUTPUT                  1039
+#define IDC_FOOTEREDIT                  1040
+#define IDC_RED_SLIDER                  1041
+#define IDC_GREEN_SLIDER                1042
+#define IDC_BLUE_SLIDER                 1043
+#define IDC_INTERNALBMP                 1045
+#define IDC_DRAWBITMAP                  1046
+#define IDC_GREENBOX                    1047
+#define IDC_EOLTAG                      1047
+#define IDC_REDBOX                      1048
+#define IDC_BLUEBOX                     1049
+#define IDC_RANDOM_STRING               1050
+#define IDC_NOCHARS                     1051
+#define IDC_NUM                         1052
+#define IDC_HEX                         1053
+#define IDC_ALPHA                       1054
+#define IDC_ALPHANUM                    1055
+#define IDC_OTHERRAD                    1056
+#define IDC_OTHERTEXT                   1057
+#define IDC_GENERATE                    1059
+#define IDC_COPYCLIP                    1061
+#define ID_FILE_EXIT                    32772
+#define ID_HELP_ABOUT                   32773
+#define ID_OPTIONS_EDIT                 32774
+#define ID_OPTION_LOADDEFAULT           32776
+#define ID_POPUP_QUOTE                  32777
+#define ID_OPTION_SHOWFLOAT             32781
+#define ID_FLOATER_CLOSE                32782
+#define ID_RESTORE                      32783
+#define ID_OPTIONS_FLOATEROPTIONS       32784
+#define ID_OPTIONS_RANDOMGEN            32785
+#define IDS_ABOUT                       57602
+#define IDS_INIFILENAME                 57603
+#define IDS_DEFAULT_QUOTE_FILE          57604
+#define IDS_DISPLAYKEY                  57605
+#define IDS_FOOTERKEY                   57606
+#define IDS_HEADERKEY                   57607
+#define IDS_TARGETKEY                   57608
+#define IDS_SEPARATORKEY                57609
+#define IDS_INTERVALKEY                 57610
+#define IDS_VERSIONKEY                  57611
+#define IDS_DEFAULTKEY                  57612
+#define IDS_ICONKEY                     57613
+#define IDS_VERSION                     57614
+#define IDS_TARGETGROUPMASK             57615
+#define IDS_INTERNALBMPKEY              57616
+#define IDS_REDTRANSKEY                 57617
+#define IDS_BLUETRANSKEY                57618
+#define IDS_GREENTRANSKEY               57619
+#define IDS_BMPFILENAMEKEY              57620
+#define IDS_EOLTAGKEY                   57621
+
+// Next default values for new objects
+// 
+#ifdef APSTUDIO_INVOKED
+#ifndef APSTUDIO_READONLY_SYMBOLS
+#define _APS_NEXT_RESOURCE_VALUE        156
+#define _APS_NEXT_COMMAND_VALUE         32786
+#define _APS_NEXT_CONTROL_VALUE         1062
+#define _APS_NEXT_SYMED_VALUE           101
+#endif
+#endif
