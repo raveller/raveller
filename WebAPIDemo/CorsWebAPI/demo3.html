@@ -1,0 +1,143 @@
+﻿<!DOCTYPE html>
+<html ng-app="DemoApp">
+<head>
+    <title></title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
+    <script src="controller3.js"></script>    
+    <link rel="stylesheet" href="style.css" type="text/css" />
+    <script>
+
+        // User Profile Details controller
+        var ProductController = function ($scope, $rootScope, $location, DemoService) {
+
+            $scope.isDataloaded = false;
+            $scope.data = [];
+
+            $scope.viewProducts = function () {
+                DemoService.getProducts(
+                        function (data, status, headers, config) {
+                            //Set the scope's user profile model with the returned data.
+                            $scope.data = data;
+
+                            $scope.isDataloaded = true;
+                        },
+                    function () {
+                        $scope.isDataloaded = false;
+                    
+                        $scope.data = [];
+                    });
+            };
+
+            $scope.viewProducts();
+        };
+
+        // User Profile Details controller
+        var SessionController = function($scope, $rootScope, $location, DemoService) {
+
+            $scope.isDataloaded = false;
+
+            $scope.sessionChecked = false;
+            $scope.hasSession = true;
+            $scope.invalidLogin = false;
+            
+            $scope.clearLogin = function() {
+                $scope.login = { UserId: "", Password: "" };
+            };
+
+            $scope.postLogin = function () {
+                DemoService.postLogin($scope.login,
+                        function (data, status, headers, config) {
+                            $scope.invalidLogin = false;
+                            $scope.clearLogin();
+                            setTimeout($scope.checkSession, 200);
+                        },
+                        function () {
+                            $scope.invalidLogin = true;
+                            $scope.clearLogin();
+                            $scope.hasSession = false;;
+                        });
+            };
+
+            $scope.checkSession = function () {
+                $scope.sessionChecked = false;
+                DemoService.checkSession(
+                    function (data, status, headers, config) {
+                        $scope.clearLogin();
+                        $scope.sessionChecked = true;
+                        $scope.hasSession = true;
+                    },
+                    function() {
+                        $scope.clearLogin();
+                        $scope.sessionChecked = true;
+                        $scope.hasSession = false;
+                    });
+            };
+            $scope.logout = function () {
+                DemoService.deleteLogout(
+                    function (data, status, headers, config) {
+                        $scope.hasSession = false;
+                    },
+                    function () {});
+            };
+
+            $scope.clearLogin();
+            $scope.checkSession();
+        };
+
+    </script>
+</head>
+<body>
+    <div ng-controller="DemoController" >           
+        <div ng-controller="SessionController" >  
+            
+            <div ng-show="!sessionChecked" ><span>Checking Session</span></div>
+            <div ng-show="sessionChecked && !hasSession" >
+                <hr/>
+                <span>Server does not recognize session please log in...</span><br/>               
+                <br/>
+                User ID: <input type="text" ng-model="login.UserId" value=""/>
+                Password: <input type="password" ng-model="login.Password" value=""/>
+                
+                <button ng-click="postLogin()" >Login</button>
+                <span ng-show="invalidLogin">Invalid credentials!</span>
+                <hr/>
+                <br/>
+            </div>
+            <div ng-show="sessionChecked && hasSession">
+                <button ng-click="logout()">Log out</button>
+            </div>
+        </div>
+
+        <div ng-controller="ProductController">
+            <button ng-click="viewProducts()">Refresh</button>
+            <div ng-show="isDataloaded">
+                Title: <input type="text" ng-model="filter.Title" value=""/>
+                Product Code: <input type="text" ng-model="filter.ProductCode" value=""/>
+                Description: <input type="text" ng-model="filter.Description" value=""/>
+                <hr/>
+                <br/>
+                <table >
+                    <tr>
+                        <th>Title</th>
+                        <th>Product Code</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Description</th>
+                        <th>Discontinued</th>
+                        <th>Unreleased</th>
+                    </tr>
+                    <tr ng-repeat="item in data | filter:filter | orderBy:'Title'">
+                        <td>{{ item.Title }}</td>
+                        <td>{{ item.ProductCode }}</td>
+                        <td>{{ item.Price }}</td>
+                        <td>{{ item.Quantity }}</td>
+                        <td>{{ item.Description }}</td>
+                        <td>{{ item.Discontinued }}</td>
+                        <td>{{ item.Unreleased }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

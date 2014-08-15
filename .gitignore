@@ -3,4 +3,7 @@ obj/*
 *.user
 *.suo
 JamesSpaces/_ReSharper.*
-
+WebApiDemo/CorsWebAPI/obj
+WebApiDemo/CorsWebAPI/bin
+*.pubxml
+WebApiDemo/packages
