@@ -24,7 +24,7 @@ namespace CorsWebAPI.Controllers
             var domain = HttpContext.Current.Request.Url.Host;
 
             #region IE Specific
-            //HttpContext.Current.Response.Headers.Add("P3P", "CP=\"CAO DSP COR CURa ADMa DEVa OUR IND PHY ONL UNI COM NAV INT DEM PRE\" policyref=\"/w3c/p3p.xml\"");
+            HttpContext.Current.Response.Headers.Add("P3P", "CP=\"CAO DSP COR CURa ADMa DEVa OUR IND PHY ONL UNI COM NAV INT DEM PRE\" policyref=\"/w3c/p3p.xml\"");
             #endregion
 
             HttpContext.Current.Response.Cookies.Add(new HttpCookie(_cookieName) { Value = demoSession.Id, Expires = demoSession.Expiry, Domain = domain});

@@ -5,5 +5,7 @@ obj/*
 JamesSpaces/_ReSharper.*
 WebApiDemo/CorsWebAPI/obj
 WebApiDemo/CorsWebAPI/bin
+WebApiDemo/WebApiDemoTest/obj
+WebApiDemo/WebApiDemoTest/bin
 *.pubxml
 WebApiDemo/packages
