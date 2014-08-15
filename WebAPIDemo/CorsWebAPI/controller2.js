@@ -26,7 +26,7 @@ app.factory('DemoService', ['$http', '$location', function ($http, $location) {
             return getUrl;
         },
         getProducts: function (successCallback, errorCallback) {
-            $http({ method: 'GET', url: this.getProductsUrl(), Accept: 'application/json' })
+            $http({ method: 'GET', url: this.getProductsUrl() })
                 .success(function (data, status, headers, config) {
                     successCallback(data, status, headers, config);
                 })
@@ -39,7 +39,7 @@ app.factory('DemoService', ['$http', '$location', function ($http, $location) {
             return getUrl;
         },
         checkSession: function (successCallback, errorCallback) {
-            $http({ method: 'GET', url: this.checkSessionUrl(), Accept: 'application/json' })
+            $http({ method: 'GET', url: this.checkSessionUrl() })
                 .success(function (data, status, headers, config) {
                     successCallback(data, status, headers, config);
                 })
@@ -52,7 +52,7 @@ app.factory('DemoService', ['$http', '$location', function ($http, $location) {
             return getUrl;
         },
         postLogin: function (login, successCallback, errorCallback) {
-            $http({ method: 'POST', url: this.postLoginUrl(), Accept: 'application/json', data: login})
+            $http({ method: 'POST', url: this.postLoginUrl(), data: login})
                 .success(function (data, status, headers, config) {
                     successCallback(data, status, headers, config);
                 })
@@ -65,7 +65,7 @@ app.factory('DemoService', ['$http', '$location', function ($http, $location) {
             return getUrl;
         },
         deleteLogout: function (successCallback, errorCallback) {
-            $http({ method: 'DELETE', url: this.deleteLogoutUrl(), Accept: 'application/json' })
+            $http({ method: 'DELETE', url: this.deleteLogoutUrl() })
                 .success(function (data, status, headers, config) {
                     successCallback(data, status, headers, config);
                 })

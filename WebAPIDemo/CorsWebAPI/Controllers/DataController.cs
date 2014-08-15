@@ -56,19 +56,5 @@ namespace CorsWebAPI.Controllers
         }
 
         #endregion
-        #region v4
-
-        [EnableCors(origins: "http://demo.huck13.com", headers: "content-type,accept,cookie", methods: "OPTIONS,GET", SupportsCredentials = true)]
-        [SessionCheckAtrribute]
-        [Route("product/v4")]
-        public HttpResponseMessage GetSessionWtihNamedOrigin()
-        {
-            if (Account == null)
-                return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "Request not allowed");
-
-            return Request.CreateResponse(DemoDataManager.GetInstance().ReadProducts(Account.Administrator));
-        }
-
-        #endregion
     }
 }

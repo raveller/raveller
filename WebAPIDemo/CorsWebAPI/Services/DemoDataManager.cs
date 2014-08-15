@@ -31,6 +31,40 @@ namespace CorsWebAPI.Services
             return _products.Where(x => x.Unreleased == false && x.Discontinued == false);
         }
 
+        public bool InsertProduct(ProductModel product)
+        {
+            if (product == null || string.IsNullOrEmpty(product.ProductCode) || _products.Contains(product))
+                return false;
+
+            _products.Add(product);
+            return true;
+        }
+
+        public bool UpdateProduct(ProductModel product)
+        {
+            if (product == null || !_products.Contains(product))
+                return false;
+
+            lock (_products)
+            {
+                _products.Remove(product);
+                _products.Add(product);
+            }
+            return true;
+        }
+
+        public bool DeleteProduct(string productCode)
+        {
+            if (string.IsNullOrEmpty(productCode))
+                return false;
+            var product = new ProductModel {ProductCode = productCode};
+            if (!_products.Contains(product))
+                return false;
+
+            _products.Remove(product);
+            return true;
+        }
+
 
         private DemoDataManager()
         {

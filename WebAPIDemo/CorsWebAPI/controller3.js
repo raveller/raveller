@@ -26,12 +26,12 @@ app.factory('DemoService', ['$http', '$location', function ($http, $location) {
             return getUrl;
         },
         getProducts: function (successCallback, errorCallback) {
-            $http({ method: 'GET', url: this.getProductsUrl(), Accept: 'application/json', withCredentials: true })
+            $http({ method: 'GET', url: this.getProductsUrl(), withCredentials: true })
                 .success(function (data, status, headers, config) {
                     successCallback(data, status, headers, config);
                 })
                 .error(function (data, status, headers, config) {
-                    errorCallback();
+                    errorCallback()
                 });
         },
         checkSessionUrl: function () {
@@ -39,7 +39,7 @@ app.factory('DemoService', ['$http', '$location', function ($http, $location) {
             return getUrl;
         },
         checkSession: function (successCallback, errorCallback) {
-            $http({ method: 'GET', url: this.checkSessionUrl(), Accept: 'application/json', withCredentials: true})
+            $http({ method: 'GET', url: this.checkSessionUrl(), withCredentials: true})
                 .success(function (data, status, headers, config) {
                     successCallback(data, status, headers, config);
                 })
@@ -52,7 +52,7 @@ app.factory('DemoService', ['$http', '$location', function ($http, $location) {
             return getUrl;
         },
         postLogin: function (login, successCallback, errorCallback) {
-            $http({ method: 'POST', url: this.postLoginUrl(), Accept: 'application/json', data: login, withCredentials: true})
+            $http({ method: 'POST', url: this.postLoginUrl(), data: login, withCredentials: true})
                 .success(function (data, status, headers, config) {
                     successCallback(data, status, headers, config);
                 })
@@ -65,7 +65,7 @@ app.factory('DemoService', ['$http', '$location', function ($http, $location) {
             return getUrl;
         },
         deleteLogout: function (successCallback, errorCallback) {
-            $http({ method: 'DELETE', url: this.deleteLogoutUrl(), Accept: 'application/json', withCredentials: true })
+            $http({ method: 'DELETE', url: this.deleteLogoutUrl(), withCredentials: true })
                 .success(function (data, status, headers, config) {
                     successCallback(data, status, headers, config);
                 })

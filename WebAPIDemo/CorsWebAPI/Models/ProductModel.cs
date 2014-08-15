@@ -14,5 +14,23 @@ namespace CorsWebAPI.Models
         public string Description { get; set; }
         public bool Discontinued { get; set; }
         public bool Unreleased { get; set; }
+
+        protected bool Equals(ProductModel other)
+        {
+            return string.Equals(ProductCode, other.ProductCode);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((ProductModel)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (ProductCode != null ? ProductCode.GetHashCode() : 0);
+        }
     }
 }

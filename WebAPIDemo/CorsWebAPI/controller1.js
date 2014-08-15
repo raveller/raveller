@@ -26,7 +26,7 @@ app.factory('DemoService', ['$http', '$location', function ($http, $location) {
             return getUrl;
         },
         getProducts: function (successCallback, errorCallback) {
-            $http({ method: 'GET', url: this.getProductsUrl(), Accept: 'application/json' })
+            $http({ method: 'GET', url: this.getProductsUrl() })
                 .success(function (data, status, headers, config) {
                     successCallback(data, status, headers, config);
                 })
