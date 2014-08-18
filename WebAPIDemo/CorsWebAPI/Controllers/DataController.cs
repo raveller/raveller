@@ -4,6 +4,7 @@ using System.Web.Http;
 using System.Web.Http.Cors;
 using CorsWebAPI.Attributes;
 using CorsWebAPI.Attributes.Portal.Filters;
+using CorsWebAPI.Models;
 using CorsWebAPI.Services;
 
 namespace CorsWebAPI.Controllers
@@ -47,7 +48,7 @@ namespace CorsWebAPI.Controllers
         [EnableCors(origins: "*", headers: "*", methods: "*", SupportsCredentials = true)]
         [SessionCheckAtrribute]
         [Route("product/v3")]
-        public HttpResponseMessage GetSessionCors()
+        public HttpResponseMessage GetAnything()
         {
             if (Account == null)
                 return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "Request not allowed");
@@ -56,5 +57,14 @@ namespace CorsWebAPI.Controllers
         }
 
         #endregion
+        [SessionCheckAtrribute]
+        [Route("product/v3")]
+        public HttpResponseMessage Post([FromBody] ProductModel product)
+        {
+            if (DemoDataManager.GetInstance().InsertProduct(product))
+                return Request.CreateResponse(HttpStatusCode.OK, product);
+
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "This was a bad product request");
+        }
     }
 }

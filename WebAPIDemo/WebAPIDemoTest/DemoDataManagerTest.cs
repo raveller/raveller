@@ -20,6 +20,7 @@ namespace WebAPIDemoTest
             manager.InsertProduct(new ProductModel {ProductCode = "WAFLEE", Title = "Southern Waffle General Charger"});
 
             Assert.IsTrue(manager.ReadProducts(false).Contains(new ProductModel { ProductCode = "WAFLEE"}));
+
         }
 
     }
