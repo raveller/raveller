@@ -148,12 +148,15 @@ namespace MSMQUtil2006
             // 
             // peekText
             // 
+            this.peekText.AllowDrop = true;
             this.peekText.Location = new System.Drawing.Point(16, 128);
             this.peekText.Multiline = true;
             this.peekText.Name = "peekText";
             this.peekText.ReadOnly = true;
+            this.peekText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.peekText.Size = new System.Drawing.Size(304, 128);
             this.peekText.TabIndex = 3;
+            this.peekText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxSelectAll);
             // 
             // queueName
             // 
@@ -196,11 +199,14 @@ namespace MSMQUtil2006
             // 
             // SendBox
             // 
+            this.SendBox.AllowDrop = true;
             this.SendBox.Location = new System.Drawing.Point(16, 264);
             this.SendBox.Multiline = true;
             this.SendBox.Name = "SendBox";
+            this.SendBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.SendBox.Size = new System.Drawing.Size(304, 120);
             this.SendBox.TabIndex = 9;
+            this.SendBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxSelectAll);
             // 
             // sendButton
             // 
@@ -326,6 +332,15 @@ namespace MSMQUtil2006
         }
 		#endregion
 
+        private void textBoxSelectAll(object sender, KeyEventArgs e)
+        {
+            if (e.Control && (e.KeyCode == Keys.A))
+            {
+                if (sender != null)
+                    ((TextBox)sender).SelectAll();
+                e.Handled = true;
+            }
+        }
 
 
         private void queuesButton_Click(object sender, System.EventArgs e)
