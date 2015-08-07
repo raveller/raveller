@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPIDemoTest", "WebAPIDemoTest\WebAPIDemoTest.csproj", "{84472379-17F9-4C07-994A-D8BAA8F12DA2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbWebAPI", "DbWebAPI\DbWebAPI.csproj", "{EFF9FB4F-DBA1-4E1E-BCD4-81379D19F9CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbWebAPI.Data", "DbWebAPI.Data\DbWebAPI.Data.csproj", "{295AFC7A-7F48-4A83-9F9A-06591DBE8FB0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{84472379-17F9-4C07-994A-D8BAA8F12DA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84472379-17F9-4C07-994A-D8BAA8F12DA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84472379-17F9-4C07-994A-D8BAA8F12DA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84472379-17F9-4C07-994A-D8BAA8F12DA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFF9FB4F-DBA1-4E1E-BCD4-81379D19F9CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFF9FB4F-DBA1-4E1E-BCD4-81379D19F9CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFF9FB4F-DBA1-4E1E-BCD4-81379D19F9CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFF9FB4F-DBA1-4E1E-BCD4-81379D19F9CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{295AFC7A-7F48-4A83-9F9A-06591DBE8FB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{295AFC7A-7F48-4A83-9F9A-06591DBE8FB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{295AFC7A-7F48-4A83-9F9A-06591DBE8FB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{295AFC7A-7F48-4A83-9F9A-06591DBE8FB0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

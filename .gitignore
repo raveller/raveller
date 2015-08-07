@@ -7,6 +7,13 @@ WebApiDemo/CorsWebAPI/obj
 WebApiDemo/CorsWebAPI/bin
 WebApiDemo/WebApiDemoTest/obj
 WebApiDemo/WebApiDemoTest/bin
+WebApi2015/packages
+WebAPI2015/DbWebApi/obj
+WebAPI2015/DbWebApi/bin
+WebAPI2015/DbWebApi.Data/obj
+WebAPI2015/DbWebApi.Data/bin
+WebAPI2015/WebApiDemoTest/obj
+WebAPI2015/WebApiDemoTest/bin
 *.pubxml
 WebApiDemo/packages
 Presentations/~*
