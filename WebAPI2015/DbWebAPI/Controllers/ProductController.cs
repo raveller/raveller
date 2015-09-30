@@ -1,4 +1,6 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -30,9 +32,16 @@ namespace DbWebAPI.Controllers
 
         [Route("product")]
         [HttpGet]
-        public HttpResponseMessage Read()
+        public IEnumerable<ProductModel> Read()
         {
-            return Request.CreateResponse(DataManager.ReadProducts(0));
+            try
+            {
+                return DataManager.ReadProducts(0);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         [Route("product")]

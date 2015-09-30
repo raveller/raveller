@@ -30,41 +30,32 @@ namespace DbWebAPI.Data
         public IEnumerable<ProductModel> ReadProducts(int userRole)
         {
             if (AdoContext == null)
-                return null;
+                yield break;
 
-            var products = new List<ProductModel>();
-            try
+            using (var command = new SqlCommand("demosp_ReadProducts", AdoContext.Connection))
             {
-                using (var command = new SqlCommand("demosp_ReadProducts", AdoContext.Connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.Add(new SqlParameter("@userRole", userRole));
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@userRole", userRole));
 
-                    using (var reader = command.ExecuteReader())
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
                     {
-                        while (reader.Read())
+                        var product = new ProductModel
                         {
-                            var product = new ProductModel
-                            {
-                                ProductCode = Convert.ToString(reader["ProductCode"]),
-                                Title = Convert.ToString(reader["Title"]),
-                                Price = Convert.ToDecimal(reader["Price"]),
-                                Quantity = Convert.ToInt32(reader["Quantity"]),
-                                Description = Convert.ToString(reader["Description"]),
-                                Active = Convert.ToBoolean(reader["Active"]),
-                                Released = Convert.ToBoolean(reader["Released"]),
-                            };
-                            products.Add(product);
-                        }
+                            ProductCode = Convert.ToString(reader["ProductCode"]),
+                            Title = Convert.ToString(reader["Title"]),
+                            Price = Convert.ToDecimal(reader["Price"]),
+                            Quantity = Convert.ToInt32(reader["Quantity"]),
+                            Description = Convert.ToString(reader["Description"]),
+                            Active = Convert.ToBoolean(reader["Active"]),
+                            Released = Convert.ToBoolean(reader["Released"]),
+                        };
+
+                        yield return product;
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                Log.Error("Exception occurred readingPRoducts", ex);
-            }
-
-            return products;
         }
 
         public bool AddAccount(AccountModel account)
