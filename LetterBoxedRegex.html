@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Letter Boxed - Solver</title>
+    <script>
+		function toRegexPattern(input) {
+			if (input.length !== 12) throw new Error("Input must be 12 characters");
+			const groups = [];
+			for (let i = 0; i < 12; i += 3) {
+				groups.push(input.toUpperCase().slice(i, i + 3));
+			}
+			// Add both lowercase and uppercase for each group
+			const toCaseSet = s => s + s.toLowerCase();
+			let pattern = "^(";
+			for (let i = 0; i < groups.length; i++) {
+				const current = toCaseSet(groups[i]);
+				const lookahead = toCaseSet(groups.slice(0, i).concat(groups.slice(i + 1)).join(''));
+				pattern += `[${current}](?=[${lookahead}])|`;
+			}
+			pattern = pattern.slice(0, -1); // Remove last '|'
+			pattern += `)*[${toCaseSet(input)}]$`;
+			return pattern;
+		}
+		
+        function generateRegex() {
+			console.log('Reg Ex submitted');
+			//alert('Reg EX submit');
+            const input = document.getElementById('inputStr').value.trim();
+			
+            const patternOutput = document.getElementById('regExPattern');
+            try {
+				console.log('Input: ' + input);
+                patternOutput.value = toRegexPattern(input);
+            } catch (e) {
+				console.log('Error: ' + e.message);
+                patternOutput.value = e.message;
+            }
+        }
+        async function searchRegexLineByLine(regexPattern, callback) {
+			
+			try {
+				const response = await fetch('/words.txt'); // Relative path to the file
+				if (!response.ok) {
+				  throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				const text = await response.text(); // Or .json(), .arrayBuffer(), etc.
+				//console.log(fileContent);
+				// You can now work with the fileContent
+			  
+				//const text = e.target.result;
+				let regex;
+				try {
+					regex = new RegExp(regexPattern);
+				} catch (err) {
+					callback([], "Invalid regex pattern.");
+					return;
+				}
+				const lines = text.split(/\r?\n/);
+				const matches = [];
+				lines.forEach((line, idx) => {
+					// Omit lines with numbers, special chars, length < 3, or starting with a capital letter
+					const trimmed = line.trim();
+					if (
+						trimmed.length < 3 ||
+						/[^a-zA-Z\s]/.test(trimmed) ||
+						/^[A-Z]/.test(trimmed)
+					) {
+						return;
+					}
+					if (regex.test(line)) {
+						matches.push({ lineNumber: idx + 1, line });
+					}
+				});
+				callback(matches);
+			} catch (error) {
+				console.error('Error reading file:', error);
+			} 
+        }
+		
+        function runLineSearch() {
+            const patternInput = document.getElementById('regExPattern');
+            const resultsText = document.getElementById('wordsInput');
+ 
+            const pattern = patternInput.value;
+            searchRegexLineByLine(pattern, function(matches, error) {
+                if (error) {
+					console.err(error);
+                    //resultsText.value = error;
+                } else if (matches.length === 0) {
+                    //
+                } else {
+					console.log('Found ' + matches.length + ' matches');
+					var matchList = [];
+                    matches.forEach(m => {
+						matchList.push(m.line);
+                    });
+					var results = matchList.join('\n');
+					
+					resultsText.value = results;
+                }
+            });		
+        }
+		
+		
+        function containsAllLetters(combination, alpha) {
+            // Check if all letters in alpha (case-insensitive) are present in combination
+            const combo = combination.replace(/\s+/g, '').toLowerCase();
+            const alphaArr = alpha.toLowerCase().split('');
+            return alphaArr.every(ch => combo.includes(ch));
+        }
+		
+		function mostlyThere(combination, alpha) {
+            // Check if all letters in alpha (case-insensitive) are present in combination
+            const combo = combination.replace(/\s+/g, '').toLowerCase();
+            const alphaArr = alpha.toLowerCase().split('');
+			
+			var missing = '';
+			for (let i = 0; i < alphaArr.length; i++) {
+				if (!combo.includes(alphaArr[i])) { 
+					missing += alphaArr[i];
+				}
+			}
+            return missing;
+        }
+
+        function generateCombinations() {
+            const alphaInput = document.getElementById('inputStr').value.trim();
+            const wordsInput = document.getElementById('wordsInput').value.trim();
+            const output = document.getElementById('output');
+			const otherChoices = document.getElementById('otherChoices');
+            output.innerHTML = '';
+            otherChoices.innerHTML = '';
+
+            // Validate alpha input
+            if (!/^[a-zA-Z]{12}$/.test(alphaInput)) {
+                output.textContent = "First input must be exactly 12 alphabetic characters.";
+                return;
+            }
+
+            // Parse words (split by whitespace or comma)
+            const words = wordsInput
+                .split(/[\s,]+/)
+                .filter(w => w.length >= 3);
+
+            const results = [];
+			const results2 = [];
+            for (let i = 0; i < words.length; i++) {
+                for (let j = 0; j < words.length; j++) {
+                    if (i === j) continue;
+                    const first = words[i];
+                    const second = words[j];
+
+                    if (first[first.length - 1].toLowerCase() === second[0].toLowerCase()
+                    ) {
+                        const combo = `${first} ${second}`;
+                        if (containsAllLetters(combo.toLowerCase(), alphaInput.toLowerCase())) {
+                            results.push(combo + ' - ' + combo.length);
+                        }
+						else {
+							let missing = mostlyThere(combo.toLowerCase(), alphaInput.toLowerCase());
+							if (missing.length < 3) {
+								results2.push(combo + ' - missing: ' + missing);
+							}
+						}
+                    }
+                }
+            }
+
+			const ul = document.createElement('ul');
+			const li = document.createElement('li');
+			li.textContent = "2 WORD SOLVES";
+			ul.appendChild(li);
+			results.forEach(pair => {
+				const li = document.createElement('li');
+				li.textContent = pair;
+				ul.appendChild(li);
+			});
+			output.appendChild(ul);
+			
+			const ul2 = document.createElement('ul');
+			const li2 = document.createElement('li');
+			li2.textContent = "OTHER OPTIONS";
+			ul2.appendChild(li2);
+			results2.forEach(pair => {
+				const li = document.createElement('li');
+				li.textContent = pair;
+				ul2.appendChild(li);
+			});
+			otherChoices.appendChild(ul2);
+        }
+		
+        function removeWord() {
+            const textarea = document.getElementById('wordsInput');
+            const wordToRemove = document.getElementById('removeInput').value.trim();
+            if (!wordToRemove) return;
+
+            // Split words by whitespace or comma, remove empty entries
+            let words = textarea.value.split(/[\s,]+/).filter(w => w.length > 0);
+
+            // Remove all occurrences of the word (case-insensitive)
+            const filtered = words.filter(
+                w => w.toLowerCase() !== wordToRemove.toLowerCase()
+            );
+
+            textarea.value = filtered.join('\n');
+        }
+    </script>
+</head>
+<body>
+    <h2>Letter Boxed - Solver</h2>
+    <div>
+		<div>
+			<a href="https://www.nytimes.com/puzzles/letter-boxed">NY Time Letter Boxed</a>
+		</div>
+		<div>
+			<a href="https://brianschiller.com/blog/2024/04/20/letter-boxed-regex/">The Solver regex blog post</a>
+		</div>
+		<div>
+			<a href="https://www.dcode.fr/word-search-regexp">RegEx Word Search</a>
+		</div>
+		<div>
+			<a href="https://github.com/dwyl/english-words/blob/master/words.txt">Embedded word list</a>		
+		</div>
+		<label for="inputStr">Enter 12-character string:</label>
+		<input type="text" id="inputStr" maxlength="12">
+		<br/>
+		<button onclick="generateRegex()">Generate Regex</button>
+		<br/><br/>
+		<label for="regExPattern">Regex Pattern:</label>
+		<input type="text" id="regExPattern">
+		<br/>
+		<button onclick="runLineSearch()">Search</button>
+		<br/><br/>
+		<label for="wordsInput">List of words (separated by space or comma):</label>
+		<br/>
+		<textarea id="wordsInput" rows="5" cols="40"></textarea>
+		<label for="removeInput">Word to remove:</label>
+		<input type="text" id="removeInput">
+		<button onclick="removeWord()">Remove</button>
+		<br/>
+		<button onclick="generateCombinations();">Generate Combinations</button>
+		<br/><br/>
+    </div>
+    <div id="output" style="margin-top:20px;"></div>
+    <div id="otherChoices" style="margin-top:20px;"></div>
+</body>
+</html>
