@@ -307,8 +307,31 @@
             
             let ballMoved = false;
             if (ball.moveCounter >= 6) {
-                ball.x += ball.dx;
-                ball.y += ball.dy;
+                // Check for paddle collision BEFORE moving the ball
+                let nextX = ball.x + ball.dx;
+                let nextY = ball.y + ball.dy;
+                let nextGridX = Math.floor((nextX - leftWall) / 18);
+                let nextGridY = Math.floor((nextY - 50) / 20);
+                
+                let paddleRow = Math.floor((paddle.y - 50) / 20);
+                let paddleLeftBoundary = paddle.gridX;
+                let paddleRightBoundary = paddle.gridX + paddle.width - 1;
+                
+                // Check if next position would hit paddle
+                if (nextGridY === paddleRow && 
+                    nextGridX >= paddleLeftBoundary && 
+                    nextGridX <= paddleRightBoundary &&
+                    ball.dy > 0) { // Only when moving down toward paddle
+                    
+                    // Hit paddle - bounce without moving to the collision position
+                    ball.dy = -Math.abs(ball.dy); // Bounce up
+                    playSound(200, 50);
+                } else {
+                    // Safe to move
+                    ball.x = nextX;
+                    ball.y = nextY;
+                }
+                
                 ball.moveCounter = 0;
                 ballMoved = true;
                 
@@ -370,18 +393,8 @@
                 }
             }
             
-            // Ball collision with paddle (character-based)
-            let paddleRow = Math.floor((paddle.y - 50) / 20);
-            if (ball.gridY === paddleRow && 
-                ball.gridX >= paddle.gridX && 
-                ball.gridX < paddle.gridX + paddle.width) {
-                
-                // Bounce off paddle
-                ball.dy = -Math.abs(ball.dy); // Always bounce up
-                ball.y = paddle.y - 20; // Position above paddle
-                
-                playSound(200, 50);
-            }
+            // Ball collision with paddle - this is now handled in the movement section above
+            // Keeping this section for any edge cases, but main collision is handled before movement
             
             // Ball collision with obstacles (character-based)
             for (let i = obstacles.length - 1; i >= 0; i--) {
@@ -536,18 +549,13 @@
                 }
             });
             
-            // Draw paddle (6-character wide string of highlighted equal signs)
+            // Draw paddle (6-character wide string without highlighting)
             ctx.font = '16px monospace';
             ctx.textAlign = 'left';
+            ctx.fillStyle = paddle.color;
             for (let i = 0; i < paddle.width; i++) {
                 let x = paddle.x + (i * 18);
-                
-                // Draw background highlight
-                ctx.fillStyle = paddle.backgroundColor;
-                ctx.fillRect(x, paddle.y, 18, 20);
-                
-                // Draw the equal sign character
-                ctx.fillStyle = paddle.color;
+                // Draw the equal sign character without background
                 ctx.fillText('=', x + 2, paddle.y + 16);
             }
             
