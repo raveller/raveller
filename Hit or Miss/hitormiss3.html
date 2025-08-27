@@ -77,6 +77,7 @@
         let gameRunning = false;
         let waitingForKey = false;
         let canSwitchZones = false; // Track if zones can switch
+        let paddleCollision = false; // Track if paddle collision occurred
         let hitTopZone = false; // Track if ball hit top zone
         
         // Initialize screen
@@ -96,6 +97,7 @@
         // BASIC emulation functions
         function CLS() {
             initScreen();
+            LOCATE(1, 1);
         }
         
         function LOCATE(row, col) {
@@ -244,11 +246,7 @@
             PRINT("PADDLE KEYS:", 7);
             LOCATE(24, 12);
             PRINT("B LEFT N = RIGHT", 7);
-            
-            // Draw initial paddle
-            LOCATE(11, NP);
-            PRINT(P$, 15);
-            
+
             // Initial hit/miss zones (GOSUB 1030)
             drawHitMissZones(false);
             
@@ -310,10 +308,12 @@
             CX += DC;
             RX += DR;
             
+            paddleCollision = false; // Reset paddle collision flag
             // Check for paddle collision BEFORE other collisions (prevent passthrough)
             if (RX === 11 && CX >= NP && CX < NP + 4) {
                 DR = -DR; // Reverse vertical direction to bounce off paddle
                 RX = 10; // Move ball above paddle
+                paddleCollision = true; // Reset zone switching on paddle hit
             }
             
             // Check what ball hit (line 320)
@@ -375,7 +375,7 @@
             updateScore();
             
             // Zone switching only when ball returns to center after hitting HIT zone
-            if (canSwitchZones && RX >= 10 && RX <= 12 && RND() > 0.7) {
+            if (!paddleCollision && canSwitchZones && RX >= 10 && RX <= 12 && RND() > 0.7) {
                 FL = FL === 0 ? -1 : 0;
                 drawHitMissZones(FL === 0);
                 canSwitchZones = false; // Reset so it only switches once per hit
@@ -481,32 +481,28 @@
         }
         
         function showGameOverScreen() {
-            // Clear bottom area and show game over message
-            for (let i = 23; i <= 25; i++) {
-                LOCATE(i, 1);
-                PRINT("                                        ");
-            }
+            CLS();
             
-            LOCATE(23, 1);
+            LOCATE(13, 5);
             PRINT("SORRY, YOU MISSED.");
-            LOCATE(24, 1);
+            LOCATE(14, 5);
             PRINT("YOUR SCORE WAS " + SC + " POINTS.");
             
             if (SC > HS) {
                 HS = SC;
                 localStorage.setItem('hitormiss-hs', HS);
-                LOCATE(25, 1);
+                LOCATE(16, 5);
                 PRINT("A NEW RECORD!");
             }
             
-            LOCATE(23, 1);
+            LOCATE(18, 5);
             PRINT("THE HIGH SCORE IS " + HS + " POINTS.");
             
             // Show restart options
             setTimeout(() => {
-                LOCATE(24, 1);
+                LOCATE(20, 5);
                 PRINT(" PLEASE SELECT:");
-                LOCATE(25, 1);
+                LOCATE(21, 5);
                 PRINT(" <R>EPLAY  <Q>UIT");
                 
                 renderScreen();
