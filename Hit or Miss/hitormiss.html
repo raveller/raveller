@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hit or Miss - Classic BASIC Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #00ff00;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #00ff00;
+        }
+
+        #gameContainer {
+            position: relative;
+            width: 720px;
+            height: 480px;
+            border: 2px solid #00ff00;
+            background-color: #000;
+            margin: 20px auto;
+        }
+
+        #gameCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        #scorePanel {
+            position: absolute;
+            left: 10px;
+            top: 120px;
+            color: #00ffff;
+            font-size: 14px;
+            line-height: 1.2;
+        }
+
+        #highScorePanel {
+            position: absolute;
+            left: 10px;
+            top: 260px;
+            color: #00ff00;
+            font-size: 14px;
+            line-height: 1.2;
+        }
+
+        #startMessage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffffff;
+            font-size: 16px;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border: 2px solid #ffffff;
+        }
+
+        #gameOverMessage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ff0000;
+            font-size: 16px;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 30px;
+            border: 2px solid #ff0000;
+            display: none;
+        }
+
+        .button {
+            background-color: #004400;
+            color: #00ff00;
+            border: 2px solid #00ff00;
+            padding: 8px 16px;
+            margin: 10px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        .button:hover {
+            background-color: #006600;
+        }
+
+        #instructions {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ffff00;
+            font-size: 14px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>HIT OR MISS</h1>
+    
+    <div id="gameContainer">
+        <canvas id="gameCanvas" width="720" height="480"></canvas>
+        
+        <div id="scorePanel">
+            <div>YOUR</div>
+            <div>SCORE:</div>
+            <div></div>
+            <div id="currentScore">0</div>
+        </div>
+        
+        <div id="highScorePanel">
+            <div>HIGH</div>
+            <div>SCORE:</div>
+            <div></div>
+            <div id="highScore">0</div>
+        </div>
+        
+        <div id="startMessage">
+            <div>PRESS ANY KEY TO BEGIN.</div>
+        </div>
+        
+        <div id="gameOverMessage">
+            <div id="gameOverText"></div>
+            <button class="button" onclick="startGame()">REPLAY</button>
+            <button class="button" onclick="location.reload()">QUIT</button>
+        </div>
+    </div>
+
+    <div id="instructions">
+        PADDLE KEYS: B = LEFT | N = RIGHT | A = LEFT | D = RIGHT | ← = LEFT | → = RIGHT
+    </div>
+
+    <script>
+        // Game constants based on corrected BASIC code
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Field layout constants (40-character wide screen like BASIC)
+        const FIELD_LEFT = 8 * 18;  // Column 8 like BASIC
+        const FIELD_RIGHT = 37 * 18; // Column 37 like BASIC
+        const CHAR_WIDTH = 18;
+        const ROW_HEIGHT = 20;
+        const PADDLE_ROW = 11; // Row 11 like BASIC
+        
+        // Game state
+        let gameState = 'waiting';
+        let score = 0;
+        let highScore = localStorage.getItem('hitormiss-highscore') || 0;
+        let hitMissFlag = false; // FL in BASIC: false = top HIT, true = top MISS
+        let missCount = 0; // M in BASIC
+        
+        // Ball (based on BASIC variables CX, RX, DC, DR)
+        let ball = {
+            cx: 0,  // Column position (CX in BASIC)
+            rx: 11, // Row position (RX in BASIC) 
+            dc: -1, // Column direction (DC in BASIC)
+            dr: -1, // Row direction (DR in BASIC)
+            char: String.fromCharCode(127), // Q$ in BASIC
+            moveCounter: 0
+        };
+        
+        // Paddle (based on BASIC variables NP, LP)
+        let paddle = {
+            position: 21, // NP in BASIC
+            lastPosition: 19, // LP in BASIC
+            width: 4, // 4 characters wide (P$ = STRING$(4,219))
+            char: String.fromCharCode(219), // Solid block character
+            moveCounter: 0 // Frame counter for movement timing
+        };
+        
+        // Field barriers (B$ string from BASIC)
+        let barriers = [];
+        
+        // Random targets that occasionally appear
+        let targets = [];
+        
+        // Input handling
+        let keys = {};
+        
+        // Initialize game
+        function init() {
+            document.getElementById('highScore').textContent = highScore;
+            createBarriers();
+            setupEventListeners();
+            gameLoop();
+        }
+        
+        function createBarriers() {
+            barriers = [];
+            // Create barrier string like BASIC: B$=B$+CHR$(43-((X<13)+(X>16))*36)
+            // This creates: + for positions 1-12, * for positions 13-16, + for positions 17-28
+            for (let row = 2; row <= 20; row++) {
+                if (row > 9 && row < 13) continue; // Skip paddle area (rows 10-12)
+                
+                for (let col = 1; col <= 28; col++) {
+                    // Corrected formula: CHR$(43-((X<13)+(X>16))*36)
+                    let charCode = 43 - ((col < 13 ? 1 : 0) + (col > 16 ? 1 : 0)) * 36;
+                    let char = String.fromCharCode(charCode);
+                    barriers.push({
+                        row: row,
+                        col: col,
+                        char: char,
+                        points: char === '+' ? 20 : 0,
+                        passthrough: char === '*'
+                    });
+                }
+            }
+        }
+        
+        function setupEventListeners() {
+            document.addEventListener('keydown', (e) => {
+                keys[e.key.toLowerCase()] = true;
+                
+                if (gameState === 'waiting') {
+                    startGame();
+                }
+            });
+            
+            document.addEventListener('keyup', (e) => {
+                keys[e.key.toLowerCase()] = false;
+            });
+        }
+        
+        function startGame() {
+            gameState = 'playing';
+            score = 0;
+            missCount = 0;
+            hitMissFlag = false;
+            
+            // Initialize ball like BASIC: CX=INT(RND*25)+9
+            do {
+                ball.cx = Math.floor(Math.random() * 25) + 9;
+            } while (ball.cx > 20 && ball.cx < 25); // Avoid certain positions
+            
+            ball.rx = 11; // Start at paddle row
+            ball.dc = -1;
+            ball.dr = -1;
+            ball.moveCounter = 0;
+            
+            // Initialize paddle
+            paddle.position = 21;
+            paddle.lastPosition = 19;
+            
+            // Reset barriers
+            createBarriers();
+            
+            // Hide start message
+            document.getElementById('startMessage').style.display = 'none';
+            document.getElementById('gameOverMessage').style.display = 'none';
+            
+            updateScore();
+        }
+        
+        function update() {
+            if (gameState !== 'playing') return;
+            
+            // Handle paddle input (like BASIC line 500)
+            paddle.moveCounter++;
+            if (paddle.moveCounter >= 8) { // Move every 8 frames
+                paddle.moveCounter = 0;
+                
+                let newPosition = paddle.position;
+                if (keys['b'] || keys['a'] || keys['arrowleft']) newPosition -= 2; // LEFT
+                if (keys['n'] || keys['d'] || keys['arrowright']) newPosition += 2; // RIGHT
+                
+                // Constrain paddle position (like BASIC lines 520-530)
+                if (newPosition < 9) newPosition = 9;
+                if (newPosition > 33) newPosition = 33;
+                
+                if (newPosition !== paddle.position) {
+                    paddle.lastPosition = paddle.position;
+                    paddle.position = newPosition;
+                }
+            }
+            
+            // Ball movement (slowed down to approximately 8 FPS)
+            ball.moveCounter++;
+            if (ball.moveCounter >= 8) { // Move every 8 frames (≈7.5 FPS at 60 FPS game loop)
+                ball.moveCounter = 0;
+                
+                // Occasionally spawn random targets (like BASIC lines 260-300)
+                if (Math.random() <= 0.05) {
+                    spawnRandomTarget();
+                }
+                
+                // Move ball (like BASIC line 310)
+                ball.cx += ball.dc;
+                ball.rx += ball.dr;
+                
+                // Check what's at current position (like BASIC line 320)
+                let pe = getScreenChar(ball.rx, ball.cx);
+                
+                // Handle barrier/target collisions (like BASIC lines 330-350)
+                if (pe === 43 || pe === 79) { // '+' or 'O' (line 330)
+                    score += 20;
+                    missCount += 1;
+                    updateScore();
+                    removeTargetAt(ball.rx, ball.cx); // Remove target that was hit
+                }
+                if (pe === 42) { // '*' (line 340)
+                    playSound(550);
+                    score += 500;
+                    updateScore();
+                    removeTargetAt(ball.rx, ball.cx); // Remove target that was hit
+                }
+                if (pe === 43) { // '+' deflects horizontally (line 350)
+                    ball.dc = -ball.dc;
+                }
+                
+                // Wall collisions (like BASIC lines 360-380)
+                if (ball.cx <= 8 || ball.cx >= 37) {
+                    ball.dc = -ball.dc;
+                    playSound(100); // SOUND 100,5 from BASIC line 370
+                    ball.cx = Math.max(9, Math.min(ball.cx, 36));
+                }
+                
+                // Vertical boundary collisions (like BASIC lines 390-450)
+                if (ball.rx <= 1 || ball.rx >= 21) {
+                    ball.dr = -ball.dr;
+                    playSound(90); // SOUND 90,5 from BASIC line 400
+                    
+                    // Check hit/miss zones (corrected FL logic)
+                    if (ball.rx <= 1) {
+                        ball.rx = 2;
+                        if (!hitMissFlag) { // FL=false means top is HIT, so this is safe
+                            // Hit the HIT zone - continue playing
+                        } else { // FL=true means top is MISS
+                            gameOver();
+                            return;
+                        }
+                    }
+                    if (ball.rx >= 21) {
+                        ball.rx = 20;
+                        if (hitMissFlag) { // FL=true means bottom is HIT, so this is safe
+                            // Hit the HIT zone - continue playing  
+                        } else { // FL=false means bottom is MISS
+                            gameOver();
+                            return;
+                        }
+                    }
+                }
+                
+                // Paddle collision (like BASIC line 430)
+                if (pe === 219) { // Paddle character
+                    ball.rx += 2 * ball.dr; // Bounce off paddle
+                }
+                
+                // Award points for hitting zones (like BASIC line 440)
+                score += missCount;
+                updateScore();
+                
+                // Randomly switch hit/miss zones (like BASIC line 450)
+                if (Math.random() > 0.7) {
+                    switchHitMiss();
+                }
+            }
+        }
+        
+        function getScreenChar(row, col) {
+            // Check if position is paddle
+            if (row === PADDLE_ROW && 
+                col >= paddle.position && 
+                col < paddle.position + paddle.width) {
+                return 219; // Paddle character
+            }
+            
+            // Check barriers
+            for (let barrier of barriers) {
+                if (barrier.row === row && barrier.col === col) {
+                    return barrier.char.charCodeAt(0);
+                }
+            }
+            
+            // Check targets
+            for (let target of targets) {
+                if (target.row === row && target.col === col) {
+                    return target.char.charCodeAt(0);
+                }
+            }
+            
+            return 32; // Space
+        }
+        
+        function spawnRandomTarget() {
+            // Like BASIC lines 260-300: IF RND>.05 THEN 310
+            let char = 42; // Start with '*' (asterisk)
+            if (missCount > 300 && Math.random() > 0.5) char = 43; // '+' if M>300
+            
+            let row, col;
+            
+            do {
+                row = Math.floor(Math.random() * 16) + 3; // XR=INT(RND*16)+3
+            } while (row > 9 && row < 13); // Avoid paddle area: IF XR>9 AND XR<13 THEN 280
+            
+            // LOCATE XR,INT(RND*21)+10 (corrected from XR/INT...)
+            col = Math.floor(Math.random() * 21) + 10;
+            
+            targets.push({
+                row: row,
+                col: col,
+                char: String.fromCharCode(char),
+                points: char === 42 ? 500 : 20 // 42=asterisk(500pts), 43=plus(20pts)
+            });
+        }
+        
+        function switchHitMiss() {
+            hitMissFlag = !hitMissFlag;
+            playSound(400);
+        }
+        
+        function removeTargetAt(row, col) {
+            // Remove any target at the specified position when it gets hit
+            targets = targets.filter(target => !(target.row === row && target.col === col));
+        }
+        
+        function updateScore() {
+            document.getElementById('currentScore').textContent = score;
+        }
+        
+        function gameOver() {
+            gameState = 'gameOver';
+            
+            // Game over sound sequence (like BASIC lines 570-590)
+            playGameOverSound();
+            
+            // Update high score
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('hitormiss-highscore', highScore);
+                document.getElementById('highScore').textContent = highScore;
+            }
+            
+            // Show game over message
+            let gameOverText = `SORRY, YOU MISSED.\n\nYOUR SCORE WAS ${score} POINTS.\n`;
+            if (score > highScore) {
+                gameOverText += 'A NEW RECORD!\n';
+            }
+            gameOverText += `THE HIGH SCORE IS ${highScore} POINTS.`;
+            
+            document.getElementById('gameOverText').innerHTML = gameOverText.replace(/\n/g, '<br>');
+            document.getElementById('gameOverMessage').style.display = 'block';
+        }
+        
+        function render() {
+            // Clear canvas
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Set up text rendering
+            ctx.font = '16px monospace';
+            ctx.textAlign = 'left';
+            
+            // Draw hit/miss zones
+            drawHitMissZones();
+            
+            // Draw field borders (like BASIC V$ characters)
+            ctx.fillStyle = '#888';
+            for (let row = 2; row <= 20; row++) {
+                ctx.fillText(String.fromCharCode(176), FIELD_LEFT - CHAR_WIDTH, row * ROW_HEIGHT);
+                ctx.fillText(String.fromCharCode(176), FIELD_RIGHT, row * ROW_HEIGHT);
+            }
+            
+            // Draw barriers
+            ctx.fillStyle = '#888';
+            for (let barrier of barriers) {
+                if (barrier.row > 9 && barrier.row < 13) continue; // Skip paddle area
+                let x = FIELD_LEFT + (barrier.col - 1) * CHAR_WIDTH; // Barrier cols 1-28 map to field positions
+                let y = barrier.row * ROW_HEIGHT;
+                ctx.fillText(barrier.char, x, y);
+            }
+            
+            // Draw targets
+            ctx.fillStyle = '#ffff00';
+            for (let target of targets) {
+                let x = FIELD_LEFT + (target.col - 1) * CHAR_WIDTH; // Correct column positioning
+                let y = target.row * ROW_HEIGHT;
+                ctx.fillText(target.char, x, y);
+            }
+            
+            // Draw paddle
+            ctx.fillStyle = '#ffffff';
+            for (let i = 0; i < paddle.width; i++) {
+                let x = FIELD_LEFT + (paddle.position - 9 + i) * CHAR_WIDTH;
+                let y = PADDLE_ROW * ROW_HEIGHT;
+                ctx.fillText(paddle.char, x, y);
+            }
+            
+            // Draw ball
+            ctx.fillStyle = '#ffffff';
+            let ballX = FIELD_LEFT + (ball.cx - 9) * CHAR_WIDTH;
+            let ballY = ball.rx * ROW_HEIGHT;
+            ctx.fillText(ball.char, ballX, ballY);
+        }
+        
+        function drawHitMissZones() {
+            ctx.font = '16px monospace';
+            
+            // Top zone (corrected M$ string)
+            if (!hitMissFlag) {
+                ctx.fillStyle = '#00ff00';
+                ctx.fillText('============HIT!============', FIELD_LEFT, 1 * ROW_HEIGHT);
+            } else {
+                ctx.fillStyle = '#ff0000';
+                ctx.fillText('////////////MISS////////////', FIELD_LEFT, 1 * ROW_HEIGHT);
+            }
+            
+            // Bottom zone  
+            if (hitMissFlag) {
+                ctx.fillStyle = '#00ff00';
+                ctx.fillText('============HIT!============', FIELD_LEFT, 21 * ROW_HEIGHT);
+            } else {
+                ctx.fillStyle = '#ff0000';
+                ctx.fillText('////////////MISS////////////', FIELD_LEFT, 21 * ROW_HEIGHT);
+            }
+        }
+        
+        function gameLoop() {
+            update();
+            render();
+            requestAnimationFrame(gameLoop);
+        }
+        
+        function playSound(frequency) {
+            // Visual flash for sound effect
+            canvas.style.filter = 'brightness(1.5)';
+            setTimeout(() => {
+                canvas.style.filter = 'brightness(1)';
+            }, 100);
+        }
+        
+        function playGameOverSound() {
+            let flashes = 0;
+            let interval = setInterval(() => {
+                canvas.style.filter = flashes % 2 === 0 ? 'brightness(0.5)' : 'brightness(1.5)';
+                flashes++;
+                if (flashes > 20) {
+                    clearInterval(interval);
+                    canvas.style.filter = 'brightness(1)';
+                }
+            }, 200);
+        }
+        
+        // Start the game
+        init();
+    </script>
+</body>
+</html>

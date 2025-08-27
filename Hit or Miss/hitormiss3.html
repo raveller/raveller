@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hit or Miss - Fresh BASIC Translation</title>
+    <style>
+        body {
+            margin: 0;
+            background: #000;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        #gameArea {
+            width: 640px;
+            height: 480px;
+            background: #000;
+            border: 2px solid #333;
+            position: relative;
+            font-size: 16px;
+            line-height: 20px;
+        }
+        
+        #screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Courier New', monospace;
+            white-space: pre;
+            font-size: 16px;
+            line-height: 20px;
+        }
+        
+        .color-3 { color: #0ff; }
+        .color-4 { color: #f00; }
+        .color-5 { color: #f0f; }
+        .color-7 { color: #fff; }
+        .color-10 { color: #0f0; }
+        .color-14 { color: #ff0; }
+        .color-15 { color: #fff; }
+    </style>
+</head>
+<body>
+    <div id="gameArea">
+        <div id="screen"></div>
+    </div>
+
+    <script>
+        // BASIC screen emulation - 40 chars wide, 25 rows
+        const SCREEN_WIDTH = 40;
+        const SCREEN_HEIGHT = 25;
+        let screen = [];
+        let screenColors = [];
+        
+        // Game variables from BASIC
+        let HS = 0;  // High score
+        let V$ = "║";  // Double pipe character for side walls
+        let S$ = String.fromCharCode(32);   // Space
+        let L$ = "";
+        let B$ = "";
+        let M$ = "////////////MISS////////////";
+        let H$ = "============HIT!============";
+        let Q$ = String.fromCharCode(127);  // Ball character
+        let P$ = "";  // Paddle string (4 solid blocks)
+        let N$ = "";  // Paddle erase string (4 spaces)
+        
+        // Game state variables
+        let CX, RX, DC, DR, SC, FL, NP, LP, M;
+        let HC, HR;
+        let gameRunning = false;
+        let waitingForKey = false;
+        let canSwitchZones = false; // Track if zones can switch
+        let hitTopZone = false; // Track if ball hit top zone
+        
+        // Initialize screen
+        function initScreen() {
+            screen = [];
+            screenColors = [];
+            for (let row = 0; row < SCREEN_HEIGHT; row++) {
+                screen[row] = [];
+                screenColors[row] = [];
+                for (let col = 0; col < SCREEN_WIDTH; col++) {
+                    screen[row][col] = ' ';
+                    screenColors[row][col] = 7;
+                }
+            }
+        }
+        
+        // BASIC emulation functions
+        function CLS() {
+            initScreen();
+        }
+        
+        function LOCATE(row, col) {
+            // Convert to 0-based indexing
+            currentRow = row - 1;
+            currentCol = col - 1;
+        }
+        
+        function PRINT(text, color = 7) {
+            if (typeof text === 'undefined') text = '';
+            let str = String(text);
+            for (let i = 0; i < str.length; i++) {
+                if (currentCol < SCREEN_WIDTH && currentRow < SCREEN_HEIGHT) {
+                    screen[currentRow][currentCol] = str[i];
+                    screenColors[currentRow][currentCol] = color;
+                    currentCol++;
+                }
+            }
+        }
+        
+        function SCREEN_READ(row, col) {
+            if (row >= 1 && row <= SCREEN_HEIGHT && col >= 1 && col <= SCREEN_WIDTH) {
+                return screen[row - 1][col - 1].charCodeAt(0);
+            }
+            return 32; // Space
+        }
+        
+        function RND() {
+            return Math.random();
+        }
+        
+        function INT(x) {
+            return Math.floor(x);
+        }
+        
+        let currentRow = 0;
+        let currentCol = 0;
+        
+        // Render screen to HTML
+        function renderScreen() {
+            let html = '';
+            for (let row = 0; row < SCREEN_HEIGHT; row++) {
+                for (let col = 0; col < SCREEN_WIDTH; col++) {
+                    let char = screen[row][col];
+                    let color = screenColors[row][col];
+                    html += `<span class="color-${color}">${char === ' ' ? '&nbsp;' : char}</span>`;
+                }
+                html += '\n';
+            }
+            document.getElementById('screen').innerHTML = html;
+        }
+        
+        // Initialize game variables (lines 20-80)
+        function initGame() {
+            HS = parseInt(localStorage.getItem('hitormiss-hs')) || 0;
+            
+            // Build L$ string (line 30)
+            L$ = S$;
+            for (let X = 1; X <= 22; X++) {
+                L$ += S$;
+            }
+            
+            // Build B$ string (lines 40-50)
+            B$ = "";
+            for (let X = 1; X <= 28; X++) {
+                let charCode = 43 - ((X < 13 ? 1 : 0) + (X > 16 ? 1 : 0)) * 36;
+                B$ += String.fromCharCode(charCode);
+            }
+            
+            // Initialize paddle strings (line 80)
+            P$ = "";
+            N$ = "";
+            for (let i = 0; i < 4; i++) {
+                P$ += "█"; // More visible solid block
+                N$ += String.fromCharCode(32);  // Space
+            }
+        }
+        
+        // Initialize ball position (line 90)
+        function initBall() {
+            do {
+                CX = INT(RND() * 25) + 9;
+            } while (CX > 20 && CX < 25);
+            
+            FL = -1;
+            DR = -1;
+            DC = -1;
+            SC = 0;
+            RX = 11;
+            
+            HC = CX;
+            HR = RX;
+            NP = 21;
+            LP = 19;
+            M = 0;
+            
+            // Initialize zone switching variables
+            canSwitchZones = false;
+            hitTopZone = false;
+        }
+        
+        // Draw initial screen (lines 120-230)
+        function drawInitialScreen() {
+            CLS();
+            
+            // Score display (lines 130-140)
+            LOCATE(6, 1);
+            PRINT("YOUR", 3);
+            LOCATE(7, 1);
+            PRINT("SCORE:", 3);
+            LOCATE(9, 1);
+            PRINT(SC, 3);
+            
+            LOCATE(13, 1);
+            PRINT("HIGH", 10);
+            LOCATE(14, 1);
+            PRINT("SCORE:", 10);
+            LOCATE(16, 1);
+            PRINT(HS, 10);
+            
+            // Draw game field (lines 150-190)
+            let KO = 3;
+            for (let X = 2; X <= 20; X++) {
+                LOCATE(X, 8);
+                PRINT(V$, 5);
+                
+                if (X > 9 && X < 13) {
+                    // Paddle area - just spaces and right border
+                    for (let i = 0; i < 28; i++) {
+                        PRINT(" ");
+                    }
+                    PRINT(V$, 5);
+                } else {
+                    // Barrier area
+                    PRINT(B$, KO);
+                    PRINT(V$, 5);
+                }
+                
+                if (X === 12) KO = 2;
+            }
+            
+            // Instructions (lines 200-220)
+            LOCATE(11, 12);
+            PRINT("PRESS ANY KEY TO BEGIN.", 15);
+            LOCATE(23, 17);
+            PRINT("PADDLE KEYS:", 7);
+            LOCATE(24, 12);
+            PRINT("B LEFT N = RIGHT", 7);
+            
+            // Draw initial paddle
+            LOCATE(11, NP);
+            PRINT(P$, 15);
+            
+            // Initial hit/miss zones (GOSUB 1030)
+            drawHitMissZones(false);
+            
+            renderScreen();
+        }
+        
+        // Draw hit/miss zones (lines 1000-1040)
+        function drawHitMissZones(switched) {
+            if (!switched) {
+                // Normal: HIT at top, MISS at bottom
+                LOCATE(1, 8);
+                PRINT(V$, 5);
+                PRINT(H$, 14);
+                PRINT(V$, 5);
+                
+                LOCATE(21, 8);
+                PRINT(V$, 5);
+                PRINT(M$, 4);
+                PRINT(V$, 5);
+            } else {
+                // Switched: MISS at top, HIT at bottom
+                LOCATE(1, 8);
+                PRINT(V$, 5);
+                PRINT(M$, 4);
+                PRINT(V$, 5);
+                
+                LOCATE(21, 8);
+                PRINT(V$, 5);
+                PRINT(H$, 14);
+                PRINT(V$, 5);
+            }
+        }
+        
+        // Main game loop (lines 240-560)
+        function gameLoop() {
+            if (!gameRunning) return;
+            
+            // Update paddle position based on held keys
+            updatePaddle();
+            
+            // Random target spawning (lines 260-300)
+            if (RND() <= 0.05) {
+                let CH = 42; // Asterisk
+                if (M > 300 && RND() > 0.5) {
+                    CH = 43; // Plus
+                }
+                
+                let XR;
+                do {
+                    XR = INT(RND() * 16) + 3;
+                } while (XR > 9 && XR < 13);
+                
+                let YR = INT(RND() * 21) + 10;
+                LOCATE(XR, YR);
+                PRINT(String.fromCharCode(CH), 7);
+            }
+            
+            // Ball movement (line 310)
+            CX += DC;
+            RX += DR;
+            
+            // Check for paddle collision BEFORE other collisions (prevent passthrough)
+            if (RX === 11 && CX >= NP && CX < NP + 4) {
+                DR = -DR; // Reverse vertical direction to bounce off paddle
+                RX = 10; // Move ball above paddle
+            }
+            
+            // Check what ball hit (line 320)
+            let PE = SCREEN_READ(RX, CX);
+            
+            // Handle collisions (lines 330-350)
+            if (PE === 43 || PE === 79) { // Plus or O
+                SC += 20;
+                M += 1;
+                updateScore();
+            }
+            if (PE === 42) { // Asterisk
+                SC += 500;
+                updateScore();
+            }
+            if (PE === 43) { // Plus deflects
+                DC = -DC;
+            }
+            
+            // Wall collisions (lines 360-380)
+            if (CX <= 8 || CX >= 37) {
+                DC = -DC;
+                CX += DC;
+                PE = SCREEN_READ(RX, CX);
+            }
+            
+            // Vertical collisions (lines 390-450)
+            if ((RX <= 1 || RX >= 21) && PE !== 219) {
+                DR = -DR;
+                
+                if (RX < 2) {
+                    RX = 2;
+                    if (FL === 0) { // Hit miss zone
+                        gameOver();
+                        return;
+                    } else {
+                        // Hit the HIT zone - ball can now switch zones when returning to center
+                        hitTopZone = true;
+                        canSwitchZones = true;
+                    }
+                }
+                if (RX > 20) {
+                    RX = 20;
+                    if (FL !== 0) { // Hit miss zone
+                        gameOver();
+                        return;
+                    } else {
+                        // Hit the HIT zone - ball can now switch zones when returning to center
+                        hitTopZone = false;
+                        canSwitchZones = true;
+                    }
+                }
+            }
+            
+            // Paddle collision handled above to prevent passthrough
+            
+            // Add bonus score (line 440)
+            SC += M;
+            updateScore();
+            
+            // Zone switching only when ball returns to center after hitting HIT zone
+            if (canSwitchZones && RX >= 10 && RX <= 12 && RND() > 0.7) {
+                FL = FL === 0 ? -1 : 0;
+                drawHitMissZones(FL === 0);
+                canSwitchZones = false; // Reset so it only switches once per hit
+            }
+            
+            // Erase old ball position (line 460)
+            LOCATE(HR, HC);
+            PRINT(S$);
+            
+            // Draw new ball position (line 470)
+            LOCATE(RX, CX);
+            PRINT(Q$, 15);
+            
+            HC = CX;
+            HR = RX;
+            
+            renderScreen();
+            
+            // Continue game loop
+            setTimeout(gameLoop, 100); // Slow down game speed
+        }
+        
+        // Update score display
+        function updateScore() {
+            LOCATE(9, 1);
+            PRINT(SC + "    ", 3); // Add spaces to clear old score
+        }
+        
+        // Handle paddle movement (lines 490-560)
+        let keys = {}; // Track which keys are currently pressed
+        
+        function handleInput() {
+            // Track key press and release
+            document.addEventListener('keydown', (e) => {
+                let key = e.key.toUpperCase();
+                keys[key] = true;
+                
+                if (waitingForKey) {
+                    // Start game
+                    waitingForKey = false;
+                    gameRunning = true;
+                    LOCATE(11, 12);
+                    PRINT(L$);
+                    
+                    // Redraw paddle after clearing start text
+                    LOCATE(11, NP);
+                    PRINT(P$, 15);
+                    
+                    renderScreen();
+                    gameLoop();
+                    return;
+                }
+            });
+            
+            document.addEventListener('keyup', (e) => {
+                let key = e.key.toUpperCase();
+                keys[key] = false;
+            });
+        }
+        
+        function updatePaddle() {
+            if (!gameRunning) return;
+            
+            let oldNP = NP;
+            
+            // Continuous movement while keys are held
+            if (keys['B'] || keys['ARROWLEFT']) NP -= 1; // Faster movement (1 instead of 2)
+            if (keys['N'] || keys['ARROWRIGHT']) NP += 1;
+            
+            if (oldNP !== NP) {
+                // Constrain paddle position
+                if (NP < 9) NP = 9;
+                if (NP > 33) NP = 33;
+                
+                // Erase old paddle
+                LOCATE(11, LP);
+                PRINT(N$);
+                
+                // Draw new paddle
+                LOCATE(11, NP);
+                PRINT(P$, 15);
+                
+                LP = NP;
+            }
+        }
+        
+        // Game over sequence (lines 570-690)
+        function gameOver() {
+            gameRunning = false;
+            
+            // Game over effects (lines 570-590)
+            let flashes = 0;
+            let flashInterval = setInterval(() => {
+                LOCATE(HR, HC);
+                PRINT(String.fromCharCode(INT(RND() * 2) + 42));
+                renderScreen();
+                flashes++;
+                if (flashes >= 45) {
+                    clearInterval(flashInterval);
+                    showGameOverScreen();
+                }
+            }, 50);
+        }
+        
+        function showGameOverScreen() {
+            // Clear bottom area and show game over message
+            for (let i = 23; i <= 25; i++) {
+                LOCATE(i, 1);
+                PRINT("                                        ");
+            }
+            
+            LOCATE(23, 1);
+            PRINT("SORRY, YOU MISSED.");
+            LOCATE(24, 1);
+            PRINT("YOUR SCORE WAS " + SC + " POINTS.");
+            
+            if (SC > HS) {
+                HS = SC;
+                localStorage.setItem('hitormiss-hs', HS);
+                LOCATE(25, 1);
+                PRINT("A NEW RECORD!");
+            }
+            
+            LOCATE(23, 1);
+            PRINT("THE HIGH SCORE IS " + HS + " POINTS.");
+            
+            // Show restart options
+            setTimeout(() => {
+                LOCATE(24, 1);
+                PRINT(" PLEASE SELECT:");
+                LOCATE(25, 1);
+                PRINT(" <R>EPLAY  <Q>UIT");
+                
+                renderScreen();
+                setupRestartKeys();
+            }, 2000);
+        }
+        
+        function setupRestartKeys() {
+            function restartHandler(e) {
+                let key = e.key.toUpperCase();
+                if (key === 'R') {
+                    document.removeEventListener('keydown', restartHandler);
+                    startNewGame();
+                } else if (key === 'Q') {
+                    document.removeEventListener('keydown', restartHandler);
+                    // Could close window or return to title
+                }
+            }
+            document.addEventListener('keydown', restartHandler);
+        }
+        
+        function startNewGame() {
+            initBall();
+            drawInitialScreen();
+            waitingForKey = true;
+        }
+        
+        // Initialize and start
+        function init() {
+            initGame();
+            initScreen();
+            handleInput();
+            startNewGame();
+        }
+        
+        // Start the game
+        window.onload = init;
+    </script>
+</body>
+</html>
