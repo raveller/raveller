@@ -38,6 +38,7 @@
             line-height: 20px;
         }
         
+        .color-2 { color: #f8f; }
         .color-3 { color: #0ff; }
         .color-4 { color: #f00; }
         .color-5 { color: #f0f; }
@@ -62,13 +63,13 @@
         // Game variables from BASIC
         let HS = 0;  // High score
         let V$ = "║";  // Double pipe character for side walls
-        let paddleBlock = "█"; // More visible solid block
+        let paddleBlock = "▄"; //
         let S$ = " ";   // Space
         let L$ = "";
         let B$ = "";
         let M$ = "////////////MISS////////////";
         let H$ = "============HIT!============";
-        let Q$ = "○"; // Ball character
+        let Q$ = "●"; // Ball character
         let P$ = "";  // Paddle string (4 solid blocks)
         let N$ = "";  // Paddle erase string (4 spaces)
         let passBlock = "□"; // Space for erasing paddle
@@ -155,6 +156,7 @@
             setTimeout(function () {
                 oscillator2.stop();
             }, durationMs);
+            return true;
         }
 
         function RND() {
@@ -344,6 +346,8 @@
             // Check what ball hit (line 320)
             let PE = SCREEN_READ(RX, CX);
             
+            let beeped = false;
+
             // Handle collisions (lines 330-350)
             if (PE === passBlock || PE === deflectBlock) { // Plus or O
                 SC += 20;
@@ -351,7 +355,8 @@
                 updateScore();
             }
             if (PE === bonusBlock) { // Asterisk
-                SC += 500;
+                SC += 500;                
+                if (!beeped) { beeped = beep(350, 50); }
                 updateScore();
             }
             if (PE === deflectBlock) { // Plus deflects
@@ -361,13 +366,17 @@
             // Wall collisions (lines 360-380)
             if (CX <= 8 || CX >= 37) {
                 DC = -DC;
-                CX += DC;
+                CX += DC;             
+                if (!beeped) { beep(100, 50) };
+                // Re-check what ball hit after bounce
+                PE = SCREEN_READ(RX, CX);
             }
             
             // PADDLE COLLISION
             if (PE == paddleBlock) {
                 DR = -DR;
-                RX=RX+2*DR
+                RX=RX+2*DR;
+                if (!beeped) { beep(200, 50) }; 
             } 
 
             let switched = false;
