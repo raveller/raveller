@@ -80,8 +80,10 @@
         let HC, HR;
         let gameRunning = false;
         let waitingForKey = false;
-        let canSwitchZones = false; // Track if zones can switch
+        let firstPlay = true;
         
+        var audioContext = new AudioContext();
+
         // Initialize screen
         function initScreen() {
             screen = [];
@@ -127,17 +129,32 @@
             return " "; // Space
         }
 
-        function beep() {
-            var context = new AudioContext();
-            var oscillator = context.createOscillator();
-            oscillator.type = "sine";
-            oscillator.frequency.value = 800;
-            oscillator.connect(context.destination);
-            oscillator.start();
+        function doubleBeep(frequency, durationMs, frequency2, durationMs2) {
+           
+            var oscillator1 = audioContext.createOscillator();
+            oscillator1.type = "sine";
+            oscillator1.frequency.value = frequency;
+            oscillator1.connect(audioContext.destination);
+            oscillator1.start();
             // Beep for 100 milliseconds
             setTimeout(function () {
-                oscillator.stop();
-            }, 100);
+                oscillator1.stop();
+                if (durationMs2 < 1) { return; }
+
+                beep(frequency2, durationMs2);
+            }, durationMs);
+        }
+
+        function beep(frequency, durationMs) {            
+            var oscillator2 = audioContext.createOscillator();
+            oscillator2.type = "sine";
+            oscillator2.frequency.value = frequency;
+            oscillator2.connect(audioContext.destination);
+            oscillator2.start();
+            // Beep for 100 milliseconds
+            setTimeout(function () {
+                oscillator2.stop();
+            }, durationMs);
         }
 
         function RND() {
@@ -373,6 +390,12 @@
                 }
 
                 switched = switchZones();
+                if (switched) {                    
+                    doubleBeep(800, 100, 600, 100); 
+                }
+                else {
+                    beep(200, 50); 
+                }
                 SC += M;
                 updateScore();
             }
@@ -401,7 +424,7 @@
 
             FL = FL === 0 ? -1 : 0;
             drawHitMissZones(FL === 0);
-            beep(); 
+            doubleBeep(800, 100, 600, 100); 
             return true;
         }
 
@@ -424,6 +447,12 @@
                 keys[key] = true;
                 
                 if (waitingForKey) {
+                    if (firstPlay) {
+                        // Resume audio context on first user interaction
+                        beep(200, 50);
+                    }
+                    firstPlay = false;
+
                     // Start game
                     waitingForKey = false;
                     gameRunning = true;
@@ -435,7 +464,9 @@
                     PRINT(P$, 15);
                     
                     renderScreen();
-                    gameLoop();
+
+                    setTimeout(doubleBeep(200, 50, 400, 50), 50); // Initial beep to enable audio on some browsers
+                    setTimeout(gameLoop(), 50);
                     return;
                 }
             });
@@ -482,6 +513,7 @@
                 LOCATE(HR, HC);
                 PRINT(String.fromCharCode(INT(RND() * 2) + 42));
                 renderScreen();
+                beep(20 * (50 - flashes), 40);
                 flashes++;
                 if (flashes >= 45) {
                     clearInterval(flashInterval);
@@ -506,7 +538,7 @@
             }
             
             LOCATE(18, 5);
-            PRINT("THE HIGH SCORE IS " + HS + " POINTS.");
+            PRINT("YOUR HIGH SCORE IS " + HS + " POINTS.");
             
             // Show restart options
             setTimeout(() => {
