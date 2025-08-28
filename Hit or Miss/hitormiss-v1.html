@@ -161,7 +161,7 @@
         
         // Field boundaries (shared across functions)
         const leftWall = 150;
-        const rightWall = 654; // 150 + (28 * 18)
+        const rightWall = 486; // 150 + (28 * 12) - collapsed character spacing
         
         let gameState = 'waiting'; // 'waiting', 'playing', 'gameOver'
         let score = 0;
@@ -181,16 +181,16 @@
             gridY: 0
         };
         
-        // Paddle properties (6-character wide string)
+        // Paddle properties (4-character wide string)
         let paddle = {
             x: 350,
             y: 290, // Middle of screen
             gridX: 0, // Grid position
-            width: 6, // 6 characters wide
-            chars: '======',
+            width: 4, // 4 characters wide
+            chars: '████',
             color: '#ffffff',
             backgroundColor: '#ffff00',
-            speed: 18 // Move by character width
+            speed: 12 // Move by character width (collapsed spacing)
         };
         
         // Field obstacles
@@ -217,7 +217,7 @@
             let startY = 50; // Start just below HIT zone
             let endY = 550;  // End just above MISS zone
             let rowHeight = 20;
-            let charWidth = 18;
+            let charWidth = 12; // Collapsed character spacing
             let startX = leftWall; // Align with wall boundaries
             
             for (let y = startY; y < endY; y += rowHeight) {
@@ -267,17 +267,17 @@
             // Reset ball position - start just above paddle
             ball.x = Math.random() * 400 + 200; // Start somewhere above paddle
             ball.y = 250; // Just above paddle area
-            ball.dx = 18; // Move by character width (45-degree movement)
+            ball.dx = 12; // Move by character width (collapsed spacing - 45-degree movement)
             ball.dy = -20; // Move by row height
             ball.lastRowConsumed = -1; // Reset consumption tracking
             
             // Update ball grid position
-            ball.gridX = Math.floor((ball.x - leftWall) / 18);
+            ball.gridX = Math.floor((ball.x - leftWall) / 12);
             ball.gridY = Math.floor((ball.y - 50) / 20);
             
             // Reset paddle to center
             paddle.gridX = 11; // Center in 28-character field
-            paddle.x = leftWall + (paddle.gridX * 18);
+            paddle.x = leftWall + (paddle.gridX * 12);
             
             // Hide start message
             document.getElementById('startMessage').style.display = 'none';
@@ -293,11 +293,11 @@
             // Update paddle position (move by character positions)
             if ((keys['a'] || keys['b'] || keys['arrowleft']) && paddle.gridX > 0) {
                 paddle.gridX -= 1;
-                paddle.x = leftWall + (paddle.gridX * 18);
+                paddle.x = leftWall + (paddle.gridX * 12);
             }
             if ((keys['d'] || keys['n'] || keys['arrowright']) && paddle.gridX < 28 - paddle.width) {
                 paddle.gridX += 1;
-                paddle.x = leftWall + (paddle.gridX * 18);
+                paddle.x = leftWall + (paddle.gridX * 12);
             }
             
             // Update ball position (character-based movement - slowed to every 6 frames)
@@ -310,7 +310,7 @@
                 // Check for paddle collision BEFORE moving the ball
                 let nextX = ball.x + ball.dx;
                 let nextY = ball.y + ball.dy;
-                let nextGridX = Math.floor((nextX - leftWall) / 18);
+                let nextGridX = Math.floor((nextX - leftWall) / 12);
                 let nextGridY = Math.floor((nextY - 50) / 20);
                 
                 let paddleRow = Math.floor((paddle.y - 50) / 20);
@@ -336,7 +336,7 @@
                 ballMoved = true;
                 
                 // Update ball grid position
-                ball.gridX = Math.floor((ball.x - leftWall) / 18);
+                ball.gridX = Math.floor((ball.x - leftWall) / 12);
                 ball.gridY = Math.floor((ball.y - 50) / 20);
             }
             
@@ -349,8 +349,8 @@
             if (ball.gridX <= 0 || ball.gridX >= 27) {
                 ball.dx = -ball.dx; // Reverse horizontal direction
                 // Maintain 45-degree angle by keeping dy unchanged
-                ball.x = Math.max(leftWall, Math.min(ball.x, leftWall + (27 * 18)));
-                ball.gridX = Math.floor((ball.x - leftWall) / 18); // Update grid position
+                ball.x = Math.max(leftWall, Math.min(ball.x, leftWall + (27 * 12)));
+                ball.gridX = Math.floor((ball.x - leftWall) / 12); // Update grid position
                 playSound(100, 100);
             }
             
@@ -404,7 +404,7 @@
                 if (obstacle.consumed) continue;
                 
                 // Calculate obstacle grid position
-                let obstacleGridX = Math.floor((obstacle.x - leftWall) / 18);
+                let obstacleGridX = Math.floor((obstacle.x - leftWall) / 12);
                 let obstacleGridY = Math.floor((obstacle.y - 50) / 20);
                 
                 // Check if ball is at same grid position as obstacle
@@ -476,7 +476,7 @@
             ctx.textAlign = 'left';
             
             // Create the hit/miss bars that align with the block structure
-            // Each character should align with the 18px width blocks
+            // Each character should align with the 12px width blocks (collapsed spacing)
             let hitBar = '';
             let missBar = '';
             
@@ -496,7 +496,7 @@
             }
             
             // Draw each character positioned to match the block grid
-            let charWidth = 18;
+            let charWidth = 12; // Collapsed character spacing
             
             // Top zone (just above block field)
             ctx.fillStyle = !hitMissFlag ? '#00ff00' : '#ff0000';
@@ -549,14 +549,14 @@
                 }
             });
             
-            // Draw paddle (6-character wide string without highlighting)
+            // Draw paddle (4-character wide solid blocks without spacing)
             ctx.font = '16px monospace';
             ctx.textAlign = 'left';
             ctx.fillStyle = paddle.color;
             for (let i = 0; i < paddle.width; i++) {
-                let x = paddle.x + (i * 18);
-                // Draw the equal sign character without background
-                ctx.fillText('=', x + 2, paddle.y + 16);
+                let x = paddle.x + (i * 12); // Collapsed character spacing
+                // Draw solid block character without spacing
+                ctx.fillText('█', x + 2, paddle.y + 16);
             }
             
             // Draw ball (character-based)
