@@ -12,4 +12,4 @@ https://www.pcjs.org/software/pcx86/lang/microsoft/basic/quickbasic/4.50/
 
 And plugged the BASIC into it and debugged the transcription errors.
 
-The final version works a lot like the original version now.   I fiddled with the sound and there now some better sounds.
+The final version works a lot like the original version now.   I fiddled with the sound and there are now some better sounds.
