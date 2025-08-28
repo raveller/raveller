@@ -46,6 +46,10 @@
         .color-10 { color: #0f0; }
         .color-14 { color: #ff0; }
         .color-15 { color: #fff; }
+        .color-16 { color: #f00; }
+        .color-17 { color: #0f0; }
+        .color-18 { color: #00f; }
+
     </style>
 </head>
 <body>
@@ -63,7 +67,7 @@
         // Game variables from BASIC
         let HS = 0;  // High score
         let V$ = "║";  // Double pipe character for side walls
-        let paddleBlock = "▄"; //
+        let paddleBlock = "█" // ▄
         let S$ = " ";   // Space
         let L$ = "";
         let B$ = "";
@@ -523,7 +527,21 @@
             let flashes = 0;
             let flashInterval = setInterval(() => {
                 LOCATE(HR, HC);
-                PRINT(String.fromCharCode(INT(RND() * 2) + 42));
+                var color = flashes % 3 + 16; // Cycle through colors 16, 17, 18
+                switch (flashes % 4) {
+                    case 0:
+                        PRINT("♠", color);
+                        break;
+                    case 1:
+                        PRINT("♥", color);
+                        break;
+                    case 2:
+                        PRINT("♣", color);
+                        break;
+                    case 3:
+                        PRINT("♣", color);
+                        break;
+                }
                 renderScreen();
                 beep(20 * (50 - flashes), 40);
                 flashes++;
