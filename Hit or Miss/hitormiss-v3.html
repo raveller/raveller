@@ -257,8 +257,8 @@
             PRINT("PRESS ANY KEY TO BEGIN.", 15);
             LOCATE(23, 17);
             PRINT("PADDLE KEYS:", 7);
-            LOCATE(24, 12);
-            PRINT("B LEFT N = RIGHT", 7);
+            LOCATE(24, 9);
+            PRINT("←,B,A = LEFT   D,N,→ = RIGHT", 7);
 
             // Initial hit/miss zones (GOSUB 1030)
             drawHitMissZones(false);
@@ -452,8 +452,8 @@
             let oldNP = NP;
             
             // Continuous movement while keys are held
-            if (keys['B'] || keys['ARROWLEFT']) NP -= 1; // Faster movement (1 instead of 2)
-            if (keys['N'] || keys['ARROWRIGHT']) NP += 1;
+            if (keys['B'] || keys['A'] || keys['ARROWLEFT']) NP -= 1; // Faster movement (1 instead of 2)
+            if (keys['N'] || keys['D'] || keys['ARROWRIGHT']) NP += 1;
             
             if (oldNP !== NP) {
                 // Constrain paddle position
