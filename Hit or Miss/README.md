@@ -1,7 +1,7 @@
 HIT OR MISS from
 https://ia802800.us.archive.org/1/items/family-computing-23/Family_Computing_Issue_23_1985_Jul.pdf
 
-I'm asked GitHub copilot to write this as a Javascript game.  It was not going that great.
+I asked GitHub copilot to write this as a Javascript game.  It was not going that great.
 
 After two somewhat working versions, I asked GitHub copilot to make a third revision after correcting the AI OCR issues with the hitormiss.bas transcription from the PDF.
 
