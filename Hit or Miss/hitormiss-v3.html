@@ -72,8 +72,8 @@
         let Q$ = "●"; // Ball character
         let P$ = "";  // Paddle string (4 solid blocks)
         let N$ = "";  // Paddle erase string (4 spaces)
-        let passBlock = "□"; // Space for erasing paddle
-        let deflectBlock = "+"; // Space for erasing paddle
+        let passBlock = "□"; // 
+        let deflectBlock = "+"; // 
         let bonusBlock = "*";
         
         // Game state variables
@@ -410,8 +410,11 @@
             }
             
             // Erase old ball position (line 460)
+            PE = SCREEN_READ(pRX, pCX);
+
             LOCATE(pRX, pCX);
-            PRINT(S$);
+            if (PE != paddleBlock) // Don't erase paddle
+                PRINT(S$);
             
             // Draw new ball position (line 470)
             LOCATE(RX, CX);
