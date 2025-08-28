@@ -452,8 +452,8 @@
             let oldNP = NP;
             
             // Continuous movement while keys are held
-            if (keys['B'] || keys['A'] || keys['ARROWLEFT']) NP -= 1; // Faster movement (1 instead of 2)
-            if (keys['N'] || keys['D'] || keys['ARROWRIGHT']) NP += 1;
+            if (keys['B'] || keys['A'] || keys['ARROWLEFT']) NP -= 2;
+            if (keys['N'] || keys['D'] || keys['ARROWRIGHT']) NP += 2;
             
             if (oldNP !== NP) {
                 // Constrain paddle position
