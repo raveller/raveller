@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+<!-- saved from url=(0031)https://raveller.net/hitormiss/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hit or Miss - Family Computing July 1985</title>
     <style>
@@ -54,7 +54,8 @@
 </head>
 <body>
     <div id="gameArea">
-        <div id="screen"></div>
+        <div id="screen">
+        </div>
     </div>
 
     <script>
@@ -553,27 +554,28 @@
         }
         
         function showGameOverScreen() {
-            CLS();
-            
-            LOCATE(13, 5);
-            PRINT("SORRY, YOU MISSED.");
-            LOCATE(14, 5);
-            PRINT("YOUR SCORE WAS " + SC + " POINTS.");
+            for (let j = 10; j < 13; j++) {
+                LOCATE(j, 9);
+                for (let i = 0; i < 28; i++) {
+                    PRINT(" ");
+                }
+            }
+            LOCATE(10, SC > 10000 ? 11 : 12);
+            PRINT()
+            PRINT("YOU SCORED " + SC + " POINTS!");
             
             if (SC > HS) {
                 HS = SC;
                 localStorage.setItem('hitormiss-hs', HS);
-                LOCATE(16, 5);
-                PRINT("A NEW RECORD!");
+                LOCATE(11, 16);
+                PRINT("A NEW RECORD!", 14);
             }
-            
-            LOCATE(18, 5);
-            PRINT("YOUR HIGH SCORE IS " + HS + " POINTS.");
-            
+            renderScreen();
+
             // Show restart options
             setTimeout(() => {
-                LOCATE(20, 5);
-                PRINT("- PRESS ANY KEY TO PLAY AGAIN -");
+                LOCATE(12, 12);
+                PRINT("PRESS ANY KEY TO RESET", 17);
                 
                 renderScreen();
                 setupRestartKeys();
@@ -605,5 +607,6 @@
         // Start the game
         window.onload = init;
     </script>
-</body>
-</html>
+
+
+</body></html>
