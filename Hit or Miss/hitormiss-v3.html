@@ -277,8 +277,8 @@
             }
             
             // Instructions (lines 200-220)
-            LOCATE(11, 12);
-            PRINT("PRESS ANY KEY TO BEGIN.", 15);
+            LOCATE(11, 13);
+            PRINT("PRESS SPACE TO BEGIN.", 15);
             LOCATE(23, 17);
             PRINT("PADDLE KEYS:", 7);
             LOCATE(24, 9);
@@ -463,7 +463,7 @@
                 let key = e.key.toUpperCase();
                 keys[key] = true;
                 
-                if (waitingForKey) {
+                if (waitingForKey && key == ' ') {
                     if (firstPlay) {
                         // Resume audio context on first user interaction
                         beep(200, 50);
@@ -574,8 +574,8 @@
 
             // Show restart options
             setTimeout(() => {
-                LOCATE(12, 12);
-                PRINT("PRESS ANY KEY TO RESET", 17);
+                LOCATE(12, 13);
+                PRINT("PRESS SPACE TO RESET", 17);
                 
                 renderScreen();
                 setupRestartKeys();
@@ -583,7 +583,8 @@
         }
         
         function setupRestartKeys() {
-            function restartHandler(e) {
+            function restartHandler(e) {                
+                if (!keys[' ']) { return; }
                 document.removeEventListener('keydown', restartHandler);
                 startNewGame();
             }
