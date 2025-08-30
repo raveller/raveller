@@ -5,11 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hit or Miss - Family Computing July 1985</title>
     <style>
+        @font-face {
+            font-family: 'square';
+            src: url('./square.ttf');
+        }
+
         body {
             margin: 0;
             background: #000;
             color: #fff;
-            font-family: 'Courier New', monospace;
+            font-family: square;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -17,7 +22,7 @@
         }
         
         #gameArea {
-            width: 400px;
+            width: 690px;
             height: 480px;
             background: #000;
             border: 2px solid #333;
@@ -32,7 +37,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            font-family: 'Courier New', monospace;
+            font-family: square;
             white-space: pre;
             font-size: 16px;
             line-height: 20px;
@@ -67,17 +72,17 @@
         
         // Game variables from BASIC
         let HS = 0;  // High score
-        let V$ = "║";  // Double pipe character for side walls
-        let paddleBlock = "█" // ▄
+        let V$ = "|"; // "║";  // Double pipe character for side walls
+        let paddleBlock = "-"; //"█; //" // ▄
         let S$ = " ";   // Space
         let L$ = "";
         let B$ = "";
         let M$ = "////////////MISS////////////";
         let H$ = "============HIT!============";
-        let Q$ = "●"; // Ball character
+        let Q$ = "O"; "●"; // "@"; // Ball character
         let P$ = "";  // Paddle string (4 solid blocks)
         let N$ = "";  // Paddle erase string (4 spaces)
-        let passBlock = "□"; // 
+        let passBlock = "~"; //"□"; // 
         let deflectBlock = "+"; // 
         let bonusBlock = "*";
         
@@ -531,16 +536,16 @@
                 var color = flashes % 3 + 16; // Cycle through colors 16, 17, 18
                 switch (flashes % 4) {
                     case 0:
-                        PRINT("♠", color);
+                        PRINT("@", color);
                         break;
                     case 1:
-                        PRINT("♥", color);
+                        PRINT("/", color);
                         break;
                     case 2:
-                        PRINT("♣", color);
+                        PRINT("-", color);
                         break;
                     case 3:
-                        PRINT("♣", color);
+                        PRINT("\\", color);
                         break;
                 }
                 renderScreen();
