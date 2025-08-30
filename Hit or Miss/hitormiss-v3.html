@@ -7,7 +7,7 @@
     <style>
         @font-face {
             font-family: 'square';
-            src: url('./square.ttf');
+            src: url('./KreativeSquare.ttf');
         }
 
         body {
@@ -22,13 +22,15 @@
         }
         
         #gameArea {
-            width: 690px;
-            height: 480px;
+            width: 1050px;
+            height: 600px;
             background: #000;
             border: 2px solid #333;
             position: relative;
-            font-size: 16px;
-            line-height: 20px;
+            font-size: 24px;
+            line-height: 24px;
+            margin: 0;
+            padding: 0;
         }
         
         #screen {
@@ -39,8 +41,8 @@
             height: 100%;
             font-family: square;
             white-space: pre;
-            font-size: 16px;
-            line-height: 20px;
+            font-size: 24px;
+            line-height: 24px;
         }
         
         .color-2 { color: #f8f; }
@@ -72,19 +74,20 @@
         
         // Game variables from BASIC
         let HS = 0;  // High score
-        let V$ = "|"; // "║";  // Double pipe character for side walls
-        let paddleBlock = "="; //"█; //" // ▄
+        let V$ = "┃"; //"|"; // "║";  // Double pipe character for side walls
+        let paddleBlock = "▬"; //"█; //" // ▄
         let S$ = " ";   // Space
         let L$ = "";
         let B$ = "";
-        let M$ = "////////////MISS////////////";
-        let H$ = "============HIT!============";
-        let Q$ = "O"; "●"; // "@"; // Ball character
+        let MT$ = "▽▽▽▽▽▽▽▽▽▽▽▽MISS▽▽▽▽▽▽▽▽▽▽▽▽";
+        let MB$ = "△△△△△△△△△△△△MISS△△△△△△△△△△△△";
+        let H$ = "▭▭▭▭▭▭▭▭▭▭▭▭HIT!▭▭▭▭▭▭▭▭▭▭▭▭";
+        let Q$ = ""; //"◦"; //"●"; //"O"; "●"; // "@"; // Ball character
         let P$ = "";  // Paddle string (4 solid blocks)
         let N$ = "";  // Paddle erase string (4 spaces)
-        let passBlock = "-"; //"□"; // 
-        let deflectBlock = "+"; // 
-        let bonusBlock = "*";
+        let passBlock = "◌"; //"◇"; //"▢"; //"▤"; //"▫"; //"▫"; "-"; //"□"; // 
+        let deflectBlock = "◈"; //"◆"; // 
+        let bonusBlock = ""; //"*";
         
         // Game state variables
         let CX, RX, DC, DR, SC, FL, NP, LP, M;
@@ -306,13 +309,13 @@
                 
                 LOCATE(21, 8);
                 PRINT(V$, 5);
-                PRINT(M$, 4);
+                PRINT(MB$, 4);
                 PRINT(V$, 5);
             } else {
                 // Switched: MISS at top, HIT at bottom
                 LOCATE(1, 8);
                 PRINT(V$, 5);
-                PRINT(M$, 4);
+                PRINT(MT$, 4);
                 PRINT(V$, 5);
                 
                 LOCATE(21, 8);
@@ -536,16 +539,16 @@
                 var color = flashes % 3 + 16; // Cycle through colors 16, 17, 18
                 switch (flashes % 4) {
                     case 0:
-                        PRINT("@", color);
+                        PRINT("◓", color);
                         break;
                     case 1:
-                        PRINT("/", color);
+                        PRINT("◑", color);
                         break;
                     case 2:
-                        PRINT("-", color);
+                        PRINT("◒", color);
                         break;
                     case 3:
-                        PRINT("\\", color);
+                        PRINT("◐", color);
                         break;
                 }
                 renderScreen();
