@@ -10,7 +10,7 @@ A few years ago I found the archive.org version of the magazine and thought "I'l
 
 I asked GitHub copilot to write this as a Javascript game.  It was not going that great.  But I tried really hard to just "vibe code" it.   "Vibe coding" turned out to be really frustrating.
 
-After two somewhat working versions, I asked GitHub copilot to make a third revision after correcting the AI OCR issues with the hitormiss.bas transcription from the PDF.  I'll include the chat transcript at a docx file.   
+The initial OCR transcription of the BASIC code was a cut and paste from Adobe Acrobat and it appears to be a successful.  A later line-by-line analysis showed that it was not!  After two somewhat working versions, I asked GitHub copilot to make a third revision after correcting the AI OCR issues with the hitormiss.bas transcription from the PDF.  I'll include the chat transcript at a docx file.   
 
 This one mirrored the BASIC logic and simulated the screen actions in a much better way using an array as the screen grid and rendering after changes.  The frame rate control using Javascript "setTimeout" around the game loop resolved the speed problem I never attempted to fix on the old 836SX.   Nevertheless, the game was still broke as there were still failures in the transcription.
 
