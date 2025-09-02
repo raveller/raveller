@@ -21,7 +21,7 @@ And plugged the BASIC into it and debugged the transcription errors.
 
 The latest version works a lot like the original version now.   I added a slight delay to the game when the HIT bar switches.   The LLM didn't have a good solution for the IBM Basic sound command so I consulted Stack Overflow to fiddle with the sound and there are now some sounds. 
 
-I then was dissatisfied with the screen appearance and switched to a "square" fixed with font.  That was good, but I wanted more Unicode options.   I found the "KreativeSquare" font and embedded that.   Open Font License included in source listing.
+I then was dissatisfied with the screen appearance and switched to a "square" fixed with font.  That was good, but I wanted more Unicode options.   I found the "KreativeSquare" font and embedded that.   Open Font License included in source listing.  https://www.kreativekorp.com/software/fonts/ksquare/
 
 Next is likely fiddling with the colors a little but.
 
