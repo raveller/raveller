@@ -23,7 +23,7 @@ The latest version works a lot like the original version now.   I added a slight
 
 I then was dissatisfied with the screen appearance and switched to a "square" fixed with font.  That was good, but I wanted more Unicode options.   I found the "KreativeSquare" font and embedded that.   Open Font License included in source listing.  https://www.kreativekorp.com/software/fonts/ksquare/
 
-Next is likely fiddling with the colors a little but.
+Next is likely fiddling with the colors a little more.
 
 ## Original Game Summary
 A summary of the article on pages 49 and 51 of the Family Computing from July 1985:
