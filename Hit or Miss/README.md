@@ -6,7 +6,7 @@ In my 8th grade computer science class in 1987 or '88, I transcribed this game a
 
 A few years ago I found the archive.org version of the magazine and thought "I'll get that working".   But I didn't.  Until the other day when someone showed me a 3D Unity game their kid made via an LLM...
 
-## The 
+## The Joy of LLM transcription
 
 I asked GitHub copilot to write this as a Javascript game.  It was not going that great.  But I tried really hard to just "vibe code" it.   "Vibe coding" turned out to be really frustrating.
 
