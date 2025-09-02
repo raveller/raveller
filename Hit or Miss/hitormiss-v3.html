@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- saved from url=(0031)https://raveller.net/hitormiss/ -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,7 +22,7 @@
         
         #gameArea {
             width: 1050px;
-            height: 600px;
+            height: 620px;
             background: #000;
             border: 2px solid #333;
             position: relative;
@@ -45,6 +44,19 @@
             line-height: 24px;
         }
         
+        #source {
+            width: 1050px!;
+            text-align: center; /* Center the text inside the div */
+        }
+
+        #source a {
+            color: #666;
+            height: 12px;
+            font-family: sans-serif;
+            font-size: 12px;
+            text-decoration: dotted underline;
+        }
+        
         .color-2 { color: #f8f; }
         .color-3 { color: #0ff; }
         .color-4 { color: #f00; }
@@ -64,7 +76,6 @@
         <div id="screen">
         </div>
     </div>
-
     <script>
         // BASIC screen emulation - 40 chars wide, 25 rows
         const SCREEN_WIDTH = 40;
@@ -194,6 +205,8 @@
                 }
                 html += '\n';
             }
+            let spaces = '&nbsp;'.repeat(38);
+            html += `<span id="source">` + spaces + `<a href="https://github.com/raveller/raveller/tree/master/Hit%20or%20Miss">source code and origin</a></span>`
             document.getElementById('screen').innerHTML = html;
         }
         
@@ -332,23 +345,6 @@
             // Update paddle position based on held keys
             updatePaddle();
             
-            // Random target spawning (lines 260-300)
-            if (RND() <= 0.05) {
-                let randomBlock = bonusBlock; // Asterisk
-                if (M > 300 && RND() > 0.5) {
-                    randomBlock = deflectBlock; // Plus
-                }
-                
-                let XR;
-                do {
-                    XR = INT(RND() * 16) + 3;
-                } while (XR > 9 && XR < 13);
-                
-                let YR = INT(RND() * 21) + 10;
-                LOCATE(XR, YR);
-                PRINT(randomBlock, 7);
-            }
-
             pCX = CX;
             pRX = RX;
             
@@ -360,22 +356,11 @@
             let PE = SCREEN_READ(RX, CX);
             
             let beeped = false;
-
-            // Handle collisions (lines 330-350)
-            if (PE === passBlock || PE === deflectBlock) { // Plus or O
-                SC += 20;
-                M += 1;
-                updateScore();
-            }
-            if (PE === bonusBlock) { // Asterisk
-                SC += 500;                
-                if (!beeped) { beeped = beep(350, 50); }
-                updateScore();
-            }
+            
             if (PE === deflectBlock) { // Plus deflects
                 DC = -DC;
             }
-            
+
             // Wall collisions (lines 360-380)
             if (CX <= 8 || CX >= 37) {
                 DC = -DC;
@@ -389,7 +374,13 @@
             if (PE == paddleBlock) {
                 DR = -DR;
                 RX=RX+2*DR;
-                if (!beeped) { beep(200, 50) }; 
+                if (!beeped) { beep(200, 50) };
+                
+                // Re-check what ball hit after bounce
+                PE = SCREEN_READ(RX, CX);
+                if (PE === deflectBlock) { // Plus deflects
+                    DC = -DC;
+                }
             } 
 
             let switched = false;
@@ -420,8 +411,31 @@
                 }
                 SC += M;
                 updateScore();
+                
+                // Re-check what ball hit after bounce
+                PE = SCREEN_READ(RX, CX);
+                if (PE === deflectBlock) { // Plus deflects
+                    DC = -DC;
+                }
             }
             
+            // Check what ball hit (line 320)
+            PE = SCREEN_READ(RX, CX);
+
+            // Handle collisions (lines 330-350)
+            if (PE === passBlock || PE === deflectBlock) { // Plus or O
+                SC += 20;
+                M += 1;
+                updateScore();
+            }
+            if (PE === bonusBlock) { // Asterisk
+                SC += 500;                
+                if (!beeped) { beeped = beep(350, 50); }
+                updateScore();
+            }
+
+            randomBlock(pRX, pCX, RX, CX);
+
             // Erase old ball position (line 460)
             PE = SCREEN_READ(pRX, pCX);
 
@@ -440,6 +454,28 @@
             
             // Continue game loop
             setTimeout(gameLoop, switched ? 300 : 100); // Slow down game speed, pause a bit longer if zones switched
+        }
+
+        function randomBlock(pRX, rCX, RX, CX) {
+            // Random target spawning (lines 260-300)
+            if (RND() <= 0.05) {
+                let randomBlock = bonusBlock; // Asterisk
+                if (M > 300 && RND() > 0.5) {
+                    randomBlock = deflectBlock; // Plus
+                }
+                
+                let XR;
+                do {
+                    XR = INT(RND() * 16) + 3;
+                } while (XR > 9 && XR < 13);
+                
+                let YR = INT(RND() * 21) + 10;
+                if (XR == pRX && YR == pCX || XR == RX && YR == CX)
+                    return;
+
+                LOCATE(XR, YR);
+                PRINT(randomBlock, 7);
+            }
         }
 
         function switchZones() {
