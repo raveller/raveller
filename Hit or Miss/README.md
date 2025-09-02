@@ -25,6 +25,9 @@ I then was dissatisfied with the screen appearance and switched to a "square" fi
 
 Next is likely fiddling with the colors a little more.
 
+## Hosting
+I'm hosting the web app at https://raveller.net/hitormiss
+
 ## Original Game Summary
 A summary of the article on pages 49 and 51 of the Family Computing from July 1985:
 
